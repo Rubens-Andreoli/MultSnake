@@ -1,8 +1,8 @@
 package com.iinmorus.multsnake.entity;
 
-import com.iinmorus.multsnake.engine.Renderer;
+import com.iinmorus.engine.Renderer;
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
@@ -21,23 +21,23 @@ public class Cherry extends Drawable{
     public Cherry(ArrayList<Point> pointsBlackList){
 	baseColor = new Color(222, 49, 99);
 	Random random = new Random();
-	location = new Point(random.nextInt(Renderer.WIDTH/Renderer.SCALE), random.nextInt(Renderer.HEIGHT/Renderer.SCALE));
+	location = new Point(random.nextInt(Renderer.WIDTH/SCALE), random.nextInt(Renderer.HEIGHT/SCALE));
 	if(pointsBlackList != null){
 	    while(pointsBlackList.contains(location)){
-		location = new Point(random.nextInt(Renderer.WIDTH/Renderer.SCALE), random.nextInt(Renderer.HEIGHT/Renderer.SCALE));
+		location = new Point(random.nextInt(Renderer.WIDTH/SCALE), random.nextInt(Renderer.HEIGHT/SCALE));
 	    }
 	}
 	effect = random.nextInt(5);
     }
 
     @Override
-    public void draw(Graphics g){
+    public void draw(Graphics2D g){
 	Color color = baseColor.darker();
 	for(int i=0; i< effect; i++){
 	    color.darker();
 	}
 	g.setColor(color);
-	g.fillRect(location.x*Renderer.SCALE, location.y*Renderer.SCALE, Renderer.SCALE, Renderer.SCALE);
+	g.fillRect(location.x*SCALE, location.y*SCALE, SCALE, SCALE);
     }
 
     public int getEffect(){
@@ -47,5 +47,5 @@ public class Cherry extends Drawable{
     public Point getLocation(){
 	return location;
     }
-
+    
 }

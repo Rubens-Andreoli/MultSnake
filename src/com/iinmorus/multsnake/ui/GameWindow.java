@@ -1,11 +1,17 @@
 package com.iinmorus.multsnake.ui;
 
-import com.iinmorus.multsnake.engine.Engine;
-import com.iinmorus.multsnake.engine.TimedEvent;
+import com.iinmorus.engine.Engine;
+import com.iinmorus.engine.StateManager;
+import com.iinmorus.multsnake.state.GameStateFactory;
+import com.iinmorus.multsnake.state.Multiplayer;
+import com.iinmorus.multsnake.state.Singleplayer;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import com.iinmorus.engine.State;
+import com.iinmorus.engine.TimedEvent;
+import com.iinmorus.multsnake.state.GameState;
 
 public class GameWindow extends JFrame{
     
@@ -13,13 +19,13 @@ public class GameWindow extends JFrame{
     private final Thread gameThread;
     
     public GameWindow(){
-	engine = new Engine();
+	engine = new Engine(new GameStateFactory());
 	gameThread = new Thread(engine);
 	this.init();
     }
     
     private void init(){
-	this.setTitle("GTC");
+	this.setTitle("GTC!");
 	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	//this.setSize(Renderer.WIDTH+6, Renderer.HEIGHT+28); 
 	this.setResizable(false);
@@ -56,26 +62,34 @@ public class GameWindow extends JFrame{
 	this.setVisible(true);
 	
 	/////EXEMPLOS:
-//	engine.getStateManager().getState(1, Singleplayer.class).getScore();
-//	engine.getStateManager().setState(1);
-//	engine.getStateManager().getState(1, Singleplayer.class).setPaused(true);
-//	engine.getStateManager().getState(2, Multiplayer.class).vsBot(StateManager.EASY);
-//	engine.getStateManager().getState(2, Multiplayer.class).getScore_P1();
-//	engine.getStateManager().loadState(/*load state from file*/);
+//	StateManager.getState(GameStateFactory.SINGLE, Singleplayer.class).getScore();	    //Pega score da partida singleplayer
+//	StateManager.startState(GameStateFactory.SINGLE);				    //Começa partida
+//	StateManager.getState(GameStateFactory.SINGLE).setPaused(true);			    //Pausa partida
+//	StateManager.getState(GameStateFactory.MULT, Multiplayer.class).vsBot(true);	    //Liga bot na partida multiplayer
+//	StateManager.getState(GameStateFactory.SINGLE).setDifficulty(GameStates.HARD);	    //Muda dificuldade da partida
+//	StateManager.getState(GameStateFactory.MULT, Multiplayer.class).getScore_P1();	    //Pega score do player 1 da partida multiplayer	    
+//	StateManager.loadState(/*loaded state from file*/);				    //Carrega partida salva
         
-//        Singleplayer s = engine.getStateManager().getState(StateManager.SINGLE_STATE, Singleplayer.class);
-//        s.setDifficulty(StateManager.EASY);
-//        engine.getStateManager().setState(StateManager.SINGLE_STATE);
-//        s.setPaused(true);
+	/////COMEÇA UMA PARTIDA EASY SINGLEPLAYER QUE COMEÇA PAUSADA:
+//	State s = StateManager.getState(GameStateFactory.SINGLE);
+//	s.setDifficulty(GameState.EASY);
+//	StateManager.startState(GameStateFactory.SINGLE);
+//	s.setPaused(true);
 
-        TimedEvent te = new TimedEvent(){
-            @Override
-            public void doEvent() {
-                System.out.println("TESTE 1Min");
-            }
-        };
-        
-        engine.EVERY_MINUTE.add(te);
+	/////COMEÇA UMA PARTIDA HARD MULTIPLAYER
+//	Multiplayer m = StateManager.getState(GameStateFactory.MULT, Multiplayer.class);
+//	m.setDifficulty(GameState.HARD);
+//	m.vsBot(true);
+//	StateManager.startState(GameStateFactory.MULT);
+
+	////ADICIONA UM EVENTO QUE ACONTECE A CADA MINUTO:
+//      TimedEvent te = new TimedEvent(){
+//          @Override
+//          public void doEvent() {
+//              System.out.println("|TESTE| Every 1Min");
+//          }
+//      };
+//      engine.EVERY_MINUTE.add(te);
     
     }
     

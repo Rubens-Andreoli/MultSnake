@@ -1,8 +1,8 @@
 package com.iinmorus.multsnake.entity;
 
-import com.iinmorus.multsnake.engine.Renderer;
+import com.iinmorus.engine.Renderer;
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
@@ -54,7 +54,7 @@ public class Snake extends Drawable{
 		    return true;
 		break;
 	    case DOWN:
-		if(head.y +ahead >= Renderer.HEIGHT/Renderer.SCALE || obstacles.contains(new Point(head.x, head.y+ahead)))  
+		if(head.y +ahead >= Renderer.HEIGHT/SCALE || obstacles.contains(new Point(head.x, head.y+ahead)))  
 		    return true;
 		break;
 	    case LEFT:
@@ -62,7 +62,7 @@ public class Snake extends Drawable{
 		    return true;
 		break;
 	    case RIGHT:
-		if(head.x +ahead >= Renderer.WIDTH/Renderer.SCALE || obstacles.contains(new Point(head.x+ahead, head.y)))  
+		if(head.x +ahead >= Renderer.WIDTH/SCALE || obstacles.contains(new Point(head.x+ahead, head.y)))  
 		    return true;
 		break;
 	    }
@@ -95,16 +95,15 @@ public class Snake extends Drawable{
     }
 
     @Override
-    public void draw(Graphics g){
+    public void draw(Graphics2D g){
 	g.setColor(baseColor.darker());
-	g.fillRect(head.x*Renderer.SCALE, head.y*Renderer.SCALE, Renderer.SCALE, Renderer.SCALE);
-	    
+	g.fillRect(head.x*SCALE, head.y*SCALE, SCALE, SCALE);
+
 	snakeParts.stream().forEach((point) -> {
 	    g.setColor(new Random().nextBoolean() ? baseColor.brighter().brighter() : baseColor.brighter());
-	    g.fillRect(point.x*Renderer.SCALE, point.y*Renderer.SCALE, Renderer.SCALE, Renderer.SCALE);
+	    g.fillRect(point.x*SCALE, point.y*SCALE, SCALE, SCALE);
 	});
     }
-
 
     public Point getHead(){
 	return head;

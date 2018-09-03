@@ -1,26 +1,27 @@
 package com.iinmorus.multsnake.state;
 
-import com.iinmorus.multsnake.engine.StateManager;
 import com.iinmorus.multsnake.bot.Bot;
 import com.iinmorus.multsnake.bot.FastBot;
 import com.iinmorus.multsnake.bot.PreciseBot;
 import com.iinmorus.multsnake.bot.SlowBot;
-import com.iinmorus.multsnake.engine.Engine;
-import com.iinmorus.multsnake.engine.Renderer;
+import com.iinmorus.engine.Engine;
+import com.iinmorus.engine.Renderer;
+import com.iinmorus.engine.SoundManager;
 import com.iinmorus.multsnake.entity.Cherry;
+import com.iinmorus.multsnake.entity.Drawable;
 import com.iinmorus.multsnake.entity.Snake;
 import com.iinmorus.multsnake.entity.Walls;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-public class Multiplayer extends State{
-    private static final long serialVersionUID = 1;
-
+public class Multiplayer extends GameState{
+    private static final long serialVersionUID = 2;
+    
     //entities
     private Snake snake_P2;
     private Snake snake_P1;
@@ -30,11 +31,7 @@ public class Multiplayer extends State{
        
     //status
     private boolean isBot;
-    private int score_P1, score_P2, time, wallAmount;
-
-    public Multiplayer(StateManager sManager){
-	super(sManager);
-    }
+    private int score_P1, score_P2;
 
     @Override
     public void init(){
@@ -46,28 +43,29 @@ public class Multiplayer extends State{
 	score_P2 = 0;
 	isOver = false;
 	isPaused = false;
-	wallAmount = Math.round(baseWallAmount*difficulty*0.60F);
 	
         snake_P1 = new Snake(0,0);
-	snake_P2 = new Snake(Renderer.WIDTH/Renderer.SCALE-1, 0);
+	snake_P2 = new Snake(Renderer.WIDTH/Drawable.SCALE-1, 0);
 	snake_P2.setBaseColor(new Color(112, 219, 112));
         cherry = new Cherry();
-        walls = new Walls(wallAmount, cherry.getLocation());
+        walls = new Walls(Math.round(baseWallAmount*difficulty*0.60F));
 	
 	if(isBot){
 	    switch(difficulty){
-		case StateManager.EASY:
+		case EASY:
 		    bot = new SlowBot(snake_P2);
 		    break;
-		case StateManager.MEDIUM:
+		case MEDIUM:
 		    bot = new PreciseBot(snake_P2);
 		    break;
-		case StateManager.HARD:
+		case HARD:
 		    bot = new FastBot(snake_P2);
 		    break;
 	    }
 	    bot.changeGoal(cherry.getLocation());
 	}
+	
+	SoundManager.loop("match", 600, SoundManager.getFrames("match") - 2000);
     }
 
     @Override
@@ -76,6 +74,8 @@ public class Multiplayer extends State{
 	    stateTick++;
             
 	    if(stateTick%updateTick == 0){
+		walls.update(cherry.getLocation());
+		
 		ArrayList<Point> blacklist = new ArrayList<>();
 		if(walls.isCollidable()) blacklist.addAll(walls.getWalls());
 		blacklist.addAll(snake_P1.getSnakePoints());
@@ -89,6 +89,7 @@ public class Multiplayer extends State{
                     
 		    boolean isP1 = false;
 		    if((isP1 = snake_P1.getHead().equals(cherry.getLocation())) || snake_P2.getHead().equals(cherry.getLocation())){
+			SoundManager.play("cherry");
 			if(isP1){
 			    score_P1 += baseScore*difficulty;
 			    this.applyEffect(snake_P1);
@@ -100,14 +101,12 @@ public class Multiplayer extends State{
 			if(isBot) bot.changeGoal(cherry.getLocation());
                     }
 		    
-                }else isOver = true;
+                }else{
+		    SoundManager.stop("match");
+		    SoundManager.play("hit");
+		    isOver = true;
+		}
             }
-
-            if(stateTick%wallRefreshTick == 0)
-                walls = new Walls(baseWallAmount, cherry.getLocation());
-	    
-	    if(stateTick%wallRefreshTick-wallFormationTick == 0)
-                walls.setCollidable(true);
 	    
 	    if(stateTick%(1000/Engine.TICK_RATE) == 0)
 		time++;
@@ -115,7 +114,7 @@ public class Multiplayer extends State{
     }
 
     @Override
-    public void draw(Graphics g){
+    public void draw(Graphics2D g){
 	g.setColor(backgroung);
 	g.fillRect(0, 0, Renderer.WIDTH, Renderer.HEIGHT);
 	
@@ -132,13 +131,13 @@ public class Multiplayer extends State{
 	g.setColor(overColor);
 	g.drawString("Time: " + time, 10, Renderer.HEIGHT-10);
         
-	g.setFont(new Font(Font.MONOSPACED, Font.BOLD, 100));
+	g.setFont(warningFont);
         if(isOver){
             g.setColor(overColor);
-            g.drawString(overMsg, Renderer.WIDTH/2-g.getFontMetrics(warningFont).stringWidth(overMsg)/2, 250);
+            g.drawString(overMsg, Renderer.WIDTH/2-g.getFontMetrics(warningFont).stringWidth(overMsg)/2, Renderer.HEIGHT/2);
         }else if(isPaused){
 	    g.setColor(pauseColor);
-	    g.drawString(pauseMsg, Renderer.WIDTH/2-g.getFontMetrics(warningFont).stringWidth(pauseMsg)/2, 250);
+	    g.drawString(pauseMsg, Renderer.WIDTH/2-g.getFontMetrics(warningFont).stringWidth(pauseMsg)/2, Renderer.HEIGHT/2);
 	}
     }
 
@@ -206,11 +205,18 @@ public class Multiplayer extends State{
     @Override
     public void setPaused(boolean isPaused){this.isPaused = isPaused;}
 
+    @Override
     public void setDifficulty(int difficulty){this.difficulty = difficulty;}
+    
     public void vsBot(boolean isBot){this.isBot = isBot;}
     
     public int getScore_P1(){return score_P1;}
     public int getScore_P2(){return score_P2;}
     public int getTime(){return time;}  
+
+    @Override
+    public String getStateID() {
+	return GameStateFactory.MULT;
+    }
 
 }
