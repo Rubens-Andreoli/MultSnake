@@ -1,45 +1,42 @@
-package com.iinmorus.engine2d;
+package com.iinmorus.engine;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.Timer;
 
-public class Engine extends Container implements Runnable, ActionListener{
+public class Engine extends Container implements Runnable {
     
     //engine configs
     public final Settings settings;
     
     //engine parts
-    private Timer timer;
     public final RenderBuffer renderBuffer;
     public final Input inputs;
     public final SoundManager sounds;
     public final StateManager states;
 
     //engine status
-    private long tick;
     private boolean running;
+    private String firstState;
 
     public Engine(Settings settings){
 	this.settings = settings;
 	
-	//parts
+	//initiate parts
 	renderBuffer = new RenderBuffer(this);
-	renderBuffer.setAntialiasing(settings.antialiasing);
-	timer = new Timer(settings.tickRate, this);
 	sounds = new SoundManager(settings.loadVolume);
-	sounds.setMute(settings.mute);
 	states = new StateManager(settings.loadBehaviour);
 	inputs = new Input(states);
+	
+	//config parts
+	renderBuffer.setAntialiasing(settings.antialiasing);
+	sounds.setMute(settings.mute);
 	if(settings.mouse) addMouseListener(inputs);
 	if(settings.keyboard) addKeyListener(inputs);
-	
-	//container
+
+	//config container
 	Dimension dim = new Dimension(settings.width, settings.height);
 	setPreferredSize(dim);
 	setMaximumSize(dim);
@@ -50,36 +47,43 @@ public class Engine extends Container implements Runnable, ActionListener{
     }
     
     public void registerStates(ArrayList<State> gameStates, String firstStateID){
+	firstState = firstStateID;
 	for(State state : gameStates){
 	    states.registerState(state);
 	}
-	states.startState(firstStateID);
     }
  
     @Override
     public void run(){
-	if(running) return;
-	timer.start();
 	running = true;
+	states.startState(firstState);
+
+	final double TICK_HERTZ = 1000000000 / settings.tickRate;
+	long now;
+	long after;
+
+	while(running) {
+	    now = System.nanoTime();
+	    states.update();
+	    renderBuffer.repaint();
+	    after = System.nanoTime();
+			
+	    while(now - after < TICK_HERTZ){
+		Thread.yield();
+		try { Thread.sleep(1); } catch(Exception e) {}
+		now = System.nanoTime();
+	    }
+	}
     }
     
     public void stop(){
 	if(!running) return;
-	timer.stop();
 	running = false;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e){
-	renderBuffer.repaint();
-	if(tick%settings.updateTick == 0){
-	    states.update();
-	}
-	tick++;
     }
     
     protected void render(Graphics2D g){
 	states.draw(g);
+	g.dispose();
     }
 
     public boolean isRunning(){return running;}    

@@ -1,38 +1,58 @@
-package com.iinmorus.engine2d;
+package com.iinmorus.engine;
 
 import java.awt.Graphics2D;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.HashMap;
 
 public class StateManager{
 
+    public static final int MANUAL_LOAD=0, REGISTER_LOAD=1, START_LOAD=2;
+    private final int loadBehaviour;
+    
     private final HashMap<String, State> states;
     private String currentState;
-    
-    private final int loadBehaviour;
-    public static final int MANUAL_LOAD=0, REGISTER_LOAD=1, START_LOAD=2;
  
-    public StateManager(int loadBehaviour){
+    public StateManager(final int loadBehaviour){
 	states = new HashMap<>();
 	this.loadBehaviour = loadBehaviour;
     }
     
-    public void registerState(State state){
-	String stateID = state.getStateID();
-	states.put(stateID, state);
-	if(loadBehaviour == 1) loadState(stateID);
-    }
-    
-    public void loadState(String stateID){
+    public void loadResources(String stateID){
 	if(!states.containsKey(stateID)) return;
 	states.get(stateID).loadResources();
     }
     
+    public void registerState(State state){
+	String stateID = state.getStateID();
+	if(!states.containsKey(stateID)){
+	    states.put(stateID, state);
+	    if(loadBehaviour == 1) loadResources(stateID);
+	}
+    }
+    
     public void startState(String stateID){
 	if(!states.containsKey(stateID)) return;
+	if(loadBehaviour == 2) loadResources(stateID);
 	if(currentState != null) states.get(currentState).unload();
-	if(loadBehaviour == 2) loadState(stateID);
 	states.get(stateID).start();
 	currentState = stateID;
+    }
+    
+    public void readState(File file) throws IOException, ClassNotFoundException{
+	if(!file.exists()) return;
+	try(FileInputStream fileInput = new FileInputStream(file);
+		ObjectInputStream objectInput = new ObjectInputStream(fileInput);) {
+	    State state = (State)objectInput.readObject();
+	    String stateID = state.getStateID();
+	    if(!states.containsKey(stateID)){
+		registerState(state);
+	    }else{
+		states.put(stateID, state);
+	    }
+	}
     }
 
     public void resumeState(String stateID){

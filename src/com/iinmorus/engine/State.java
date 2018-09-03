@@ -1,5 +1,5 @@
 
-package com.iinmorus.engine2d;
+package com.iinmorus.engine;
 
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;

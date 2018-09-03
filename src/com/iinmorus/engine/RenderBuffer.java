@@ -1,5 +1,6 @@
-package com.iinmorus.engine2d;
+package com.iinmorus.engine;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -7,8 +8,9 @@ import javax.swing.JPanel;
 
 public class RenderBuffer extends JPanel{
     
-    private final Engine engine;
+    private Engine engine;
     
+    private Graphics2D g2d;
     private boolean antialiasing;
   
     protected RenderBuffer(Engine engine){
@@ -18,8 +20,8 @@ public class RenderBuffer extends JPanel{
     @Override
     protected void paintComponent(Graphics g){
 	super.paintComponent(g);
-	
-	Graphics2D g2d =(Graphics2D)g;
+	g2d =(Graphics2D)g;
+
 	if(antialiasing)
 	    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 	if(engine != null) engine.render(g2d);
@@ -27,5 +29,6 @@ public class RenderBuffer extends JPanel{
 
     public void setAntialiasing(boolean antialiasing) {
 	this.antialiasing = antialiasing;
-    }   
+    } 
+    
 }

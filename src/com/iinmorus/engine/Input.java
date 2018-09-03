@@ -1,4 +1,4 @@
-package com.iinmorus.engine2d;
+package com.iinmorus.engine;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -28,15 +28,18 @@ public class Input implements MouseListener, KeyListener{
 	stateManager.getCurrentState().keyReleased(e);
     }
 
-
     @Override
     public void mouseClicked(MouseEvent e){}
+    
     @Override
     public void mouseReleased(MouseEvent e){}
+    
     @Override
     public void mouseEntered(MouseEvent e){}
+    
     @Override
     public void mouseExited(MouseEvent e){}
+    
     @Override
     public void keyTyped(KeyEvent e){}
     

@@ -1,39 +1,24 @@
 package com.iinmorus.gtc.ui;
 
-import com.iinmorus.engine2d.Engine;
-import com.iinmorus.engine2d.Settings;
-import com.iinmorus.engine2d.State;
-import com.iinmorus.gtc.state.GameState;
-import com.iinmorus.gtc.state.Idle;
-import com.iinmorus.gtc.state.Multiplayer;
-import com.iinmorus.gtc.state.Singleplayer;
-import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import com.iinmorus.engine.Engine;
+import com.iinmorus.engine.Settings;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.SwingUtilities;
 
 public class GameWindow extends JFrame{
     
-    public static final Engine GAME;
+    public static final Engine ENGINE;
     static{
 	Settings s = new Settings.Builder().create();
-	ArrayList<State> states = new ArrayList<>();
-	states.add(new Idle());
-	states.add(new Singleplayer());
-	states.add(new Multiplayer());
-	GAME = new Engine(s);
-	GAME.registerStates(states, GameState.IDLE);
+	ENGINE = new Engine(s);
     }
 
     private Thread gameThread;
     
     public GameWindow(){
-	//SwingUtilities.invokeLater(GAME);
-	gameThread = new Thread(GAME);
+	gameThread = new Thread(ENGINE);
 	gameThread.setName("GAME");
 	this.init();
     }
@@ -42,11 +27,8 @@ public class GameWindow extends JFrame{
 	this.setTitle("GTC!");
 	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	this.setResizable(false);
-	this.setContentPane(GAME);
-	if(GAME.settings.fullscreen){
-	    this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-	    this.setUndecorated(true);
-	}
+	this.setContentPane(ENGINE);
+
 	JMenuBar menu = new JMenuBar();
 	    JMenu game = new JMenu("Game");
 		JMenu start = new JMenu("Start");
@@ -73,12 +55,7 @@ public class GameWindow extends JFrame{
 	this.pack();
 	
 	gameThread.start();
-	try {
-	    gameThread.join();
-	} catch (InterruptedException ex) {
-	    Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
-	}
-	
+
 	/////EXEMPLOS:
 //	GAME.states.getState(GameState.SINGLE, Singleplayer.class).getScore();		    //Pega score da partida singleplayer
 //	GAME.states.startState(GameState.SINGLE);					    //Começa partida
