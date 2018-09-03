@@ -77,6 +77,11 @@ public abstract class SoundManager {
 	if(clips.get(audioID) == null) return;
 	if(clips.get(audioID).isRunning()) clips.get(audioID).stop();
     }
+    
+    public static void stopAll(){
+	for(Clip clip : clips.values())
+	    if(clip.isRunning()) clip.stop();
+    }
 	
     public static void resume(String audioID) {
 	if(mute) return;

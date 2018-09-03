@@ -4,31 +4,32 @@ import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.Timer;
 
 public class Engine implements Runnable, ActionListener{
     
     //timed events
-    public final ArrayList<TimedEvent> EVERY_05MIN = new ArrayList<>();
-    public final ArrayList<TimedEvent> EVERY_01MIN = new ArrayList<>();
-    public final ArrayList<TimedEvent> EVERY_30SEC = new ArrayList<>();
+    private static final HashMap<Integer, ArrayList<TimedEvent>> EVENTS = new HashMap<>();
     
     //engine configs
     public static final int FPS = 60;
     public static final int TICK_RATE = 1000/FPS;
     private final Timer timer;
     private long runTick;
+    private boolean running;
     
     //engine parts
     private final Renderer renderer;
     private final InputListener input;
 
-    public Engine(StateFactory factory){
+    public Engine(){
 	timer = new Timer(TICK_RATE, this);
 	renderer = new Renderer(this);
 	input = new InputListener();
 	SoundManager.init();
-	StateManager.init(factory);
+	StateManager.init();
     }
 
     @Override
@@ -36,6 +37,30 @@ public class Engine implements Runnable, ActionListener{
 	renderer.addMouseListener(input);
 	renderer.addKeyListener(input);
 	timer.start();
+	running = true;
+    }
+    
+    public void stop(){
+	timer.stop();
+	running = false;
+    }
+    
+    public static void addEvent(TimedEvent event){
+	int interval = event.getInterval();
+	if(EVENTS.containsKey(interval))
+	    EVENTS.get(interval).add(event);
+	else{
+	    ArrayList<TimedEvent> eventList = new ArrayList<>();
+	    eventList.add(event);
+	    EVENTS.put(interval, eventList);
+	}
+    }
+    
+    public static void removeEvent(TimedEvent event){
+	int interval = event.getInterval();
+	EVENTS.get(interval).remove(event);
+	if(EVENTS.get(interval).isEmpty())
+	    EVENTS.remove(interval);
     }
 
     @Override
@@ -44,22 +69,11 @@ public class Engine implements Runnable, ActionListener{
 	
 	StateManager.update();
 
-        if(runTick%(30000/TICK_RATE) == 0){
-	    EVERY_30SEC.stream().forEach((te) -> {
-		te.doEvent();
-	    });
-	}
-
-	if(runTick%(60000/TICK_RATE) == 0){
-	    EVERY_01MIN.stream().forEach((te) -> {
-		te.doEvent();
-	    });
-	}
-	
-	if(runTick%(300000/TICK_RATE) == 0){
-	    EVERY_30SEC.stream().forEach((te) -> {
-		te.doEvent();
-	    });
+	for(Map.Entry entry : EVENTS.entrySet()){
+	    if(runTick%((int)entry.getKey()/TICK_RATE) == 0){
+		for(TimedEvent te : (ArrayList<TimedEvent>)entry.getValue())
+		    te.doEvent();
+	    }
 	}
 	
 	runTick++;
@@ -71,6 +85,10 @@ public class Engine implements Runnable, ActionListener{
 
     public Renderer getRenderer(){
 	return renderer;
+    }
+
+    public boolean isRunning() {
+	return running;
     }
 
 }

@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent;
 public interface State{
 
     void loadResources();
-    void init();
+    void start();
     void update();
     void draw(Graphics2D g);
     
