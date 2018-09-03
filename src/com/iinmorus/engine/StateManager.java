@@ -1,6 +1,5 @@
 package com.iinmorus.engine;
 
-import static com.iinmorus.engine.StateManager.LoadBehavior.REGISTER;
 import static com.iinmorus.engine.StateManager.LoadBehavior.START;
 import java.awt.Graphics2D;
 import java.io.File;
@@ -8,33 +7,34 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.HashMap;
+import static com.iinmorus.engine.StateManager.LoadBehavior.CONSTRUCTION;
 
 public class StateManager{
 
     public static enum LoadBehavior{
-	MANUAL, REGISTER, START;
+	MANUAL, CONSTRUCTION, START;
     }
 
     private LoadBehavior loadBehavior;
     private final HashMap<String, State> states;
     private String currentState;
+    private final Game game;
  
-    public StateManager(Engine engine){
-	states = new HashMap<>();
-	this.loadBehavior = engine.settings.loadBehavior;
+    public StateManager(Game game){
+        this.game = game;
+	this.states = game.stateMap;
+        
+        if(loadBehavior == CONSTRUCTION){
+            for(String stateID : states.keySet())
+                loadResources(stateID);
+        }
+        
+        startState(game.startStateID);
     }
 
     public void loadResources(String stateID){
 	if(!states.containsKey(stateID)) return;
 	states.get(stateID).loadResources();
-    }
-    
-    public void registerState(State state){
-	String stateID = state.getStateID();
-	if(!states.containsKey(stateID)){
-	    states.put(stateID, state);
-	    if(loadBehavior == REGISTER) loadResources(stateID);
-	}
     }
     
     public void startState(String stateID){
@@ -51,11 +51,7 @@ public class StateManager{
 		ObjectInputStream objectInput = new ObjectInputStream(fileInput);) {
 	    State state = (State)objectInput.readObject();
 	    String stateID = state.getStateID();
-	    if(!states.containsKey(stateID)){
-		registerState(state);
-	    }else{
-		states.put(stateID, state);
-	    }
+	    states.put(stateID, state);
 	}
     }
 

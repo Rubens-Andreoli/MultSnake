@@ -44,7 +44,7 @@ public class Settings {
 	private boolean mouse = true;
 	private boolean keyboard = true;
 	
-	private LoadBehavior loadBehavior = LoadBehavior.REGISTER;
+	private LoadBehavior loadBehavior = LoadBehavior.CONSTRUCTION;
 
 
 	public Builder setTickRate(int tickRate){

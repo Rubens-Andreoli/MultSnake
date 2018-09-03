@@ -7,28 +7,28 @@ import java.awt.event.MouseListener;
 
 public class InputBuffer implements MouseListener, KeyListener{
 
-    private final Engine engine;
+    private final Game game;
     
-    protected InputBuffer(Engine engine){
-	this.engine = engine;
+    protected InputBuffer(Game game){
+	this.game = game;
     }
     
     @Override
     public void mousePressed(MouseEvent e){
-	if(engine.isRunning())
-	    engine.states.getCurrentState().mousePressed(e);
+	if(game.engine.isRunning())
+	    game.states.getCurrentState().mousePressed(e);
     }
 
     @Override
     public void keyPressed(KeyEvent e){
-	if(engine.isRunning())
-	    engine.states.getCurrentState().keyPressed(e);
+	if(game.engine.isRunning())
+	    game.states.getCurrentState().keyPressed(e);
     }
 
     @Override
     public void keyReleased(KeyEvent e){
-	if(engine.isRunning())
-	    engine.states.getCurrentState().keyReleased(e);
+	if(game.engine.isRunning())
+	    game.states.getCurrentState().keyReleased(e);
     }
 
     @Override

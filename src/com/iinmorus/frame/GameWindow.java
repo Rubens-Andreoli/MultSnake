@@ -1,7 +1,9 @@
 package com.iinmorus.frame;
 
-import com.iinmorus.engine.Engine;
+import com.iinmorus.engine.Game;
 import com.iinmorus.engine.Settings;
+import com.iinmorus.engine.State;
+import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -9,10 +11,10 @@ import javax.swing.JMenuItem;
 
 public class GameWindow extends JFrame{
 
-    public static final Settings SETTINGS = new Settings.Builder().create();
-    public static final Engine ENGINE = new Engine(SETTINGS);
+    private Game game;
     
     public GameWindow(){
+        game = new Game(new Settings.Builder().create(), new HashMap<String, State>(), null);
 	this.init();
     }
     
@@ -20,7 +22,7 @@ public class GameWindow extends JFrame{
 	this.setTitle("GTC!");
 	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	this.setResizable(false);
-	this.setContentPane(ENGINE.renderBuffer);
+	this.setContentPane(game.getGameContainer());
 
 	JMenuBar menu = new JMenuBar();
 	    JMenu game = new JMenu("Game");
@@ -47,8 +49,7 @@ public class GameWindow extends JFrame{
 	this.setJMenuBar(menu);
 
 	this.pack();
-	
-	ENGINE.start(null, null);
+        this.game.gameThread.start();
 
 	/////EXEMPLOS:
 //	GAME.states.getState(GameState.SINGLE, Singleplayer.class).getScore();		    //Pega score da partida singleplayer

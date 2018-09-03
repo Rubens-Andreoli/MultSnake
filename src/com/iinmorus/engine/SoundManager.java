@@ -13,13 +13,12 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class SoundManager {
     
     private final HashMap<String, Clip> clips;
-    private final float loadVolume;
+    private final Game game;
     private boolean mute;
 
-    public SoundManager(Engine engine) {
+    public SoundManager(Game game) {
 	clips = new HashMap<String, Clip>();
-	this.loadVolume = engine.settings.loadVolume;
-	this.mute = engine.settings.mute;
+        this.game = game;
     }
 
     public void load(String filepath, String audioID){
@@ -39,7 +38,6 @@ public class SoundManager {
 	    AudioInputStream dais = AudioSystem.getAudioInputStream(decodeFormat, ais);
 	    Clip c = AudioSystem.getClip();
 	    c.open(dais);
-	    setVolume(c, loadVolume);
 	    clips.put(audioID, c);
 	} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 	    e.printStackTrace();
@@ -53,7 +51,7 @@ public class SoundManager {
     }
 	
     public void play(String audioID, int frame) {
-	if(mute) return;
+	if(mute || !game.engine.isRunning()) return;
 	Clip c = clips.get(audioID);
 	if(c == null) return;
 	if(c.isRunning()) c.stop();
@@ -73,7 +71,7 @@ public class SoundManager {
     }
 	
     public void resume(String audioID) {
-	if(mute) return;
+	if(mute || !game.engine.isRunning()) return;
 	Clip c = clips.get(audioID);
 	if(c == null) return;
 	if(c.isRunning()) return;
@@ -93,10 +91,10 @@ public class SoundManager {
     }
 	
     public void loop(String audioID, int frame, int start, int end) {
-	Clip c = clips.get(audioID);
+	if(mute || !game.engine.isRunning()) return;
+        Clip c = clips.get(audioID);
 	if(c == null) return;
 	stop(audioID);
-	if(mute) return;
 	c.setLoopPoints(start, end);
 	c.setFramePosition(frame);
 	while(!c.isRunning()) c.loop(Clip.LOOP_CONTINUOUSLY);

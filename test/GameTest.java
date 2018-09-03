@@ -1,25 +1,26 @@
-package com.iinmorus.engine;
 
-import java.awt.Color;
+
+import com.iinmorus.engine.*;
 import java.awt.Container;
 import java.awt.Graphics2D;
 import java.util.HashMap;
+import java.util.List;
 
-public class Game {
+public abstract class GameTest {
     
     private String name = "ARCADIA v1.0";
     public final Settings settings;
     public final HashMap<String, State> stateMap;
     public final String startStateID;
     
-    public final Thread gameThread;
     public final Engine engine;
+    private final Thread gameThread;
     public final RenderBuffer renderBuffer;
     public final InputBuffer inputBuffer;
     public final SoundManager sounds;
     public final StateManager states;
 
-    public Game(Settings settings, HashMap<String, State> stateMap, String startStateID) {
+    public GameTest(Settings settings, HashMap<String, State> stateMap, String startStateID) {
 	this.settings = settings;
         this.stateMap = stateMap;
         this.startStateID = startStateID;
