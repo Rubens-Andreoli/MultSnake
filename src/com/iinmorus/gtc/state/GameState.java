@@ -1,7 +1,7 @@
 package com.iinmorus.gtc.state;
 
-import com.iinmorus.engine.SoundManager;
 import com.iinmorus.engine.State;
+import static com.iinmorus.gtc.ui.GameWindow.GAME;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
@@ -9,6 +9,7 @@ import java.io.Serializable;
 
 public abstract class GameState implements State, Serializable{
     public static final int EASY=1, MEDIUM=2, HARD=3;
+    public static final String IDLE="idle", SINGLE="single", MULT="mult";
     
     //ui
     protected Color backgroung = Color.BLACK;
@@ -49,12 +50,12 @@ public abstract class GameState implements State, Serializable{
 	}
 	
 	//Music
-	SoundManager.loadMP3("/sounds/idle.mp3", "idle");
-	SoundManager.loadMP3("/sounds/match.mp3", "match");
+	GAME.sounds.loadMP3("/sounds/idle.mp3", "idle");
+	GAME.sounds.loadMP3("/sounds/match.mp3", "match");
 	
 	//SFX
-	SoundManager.loadMP3("/sounds/hit.mp3", "hit");
-	SoundManager.loadMP3("/sounds/cherry.mp3", "cherry");
+	GAME.sounds.loadMP3("/sounds/hit.mp3", "hit");
+	GAME.sounds.loadMP3("/sounds/cherry.mp3", "cherry");
 	
     }
     

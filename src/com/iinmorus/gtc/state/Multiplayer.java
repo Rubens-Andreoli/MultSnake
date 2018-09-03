@@ -7,11 +7,11 @@ import com.iinmorus.gtc.bot.SlowBot;
 import com.iinmorus.engine.Engine;
 import com.iinmorus.engine.Renderer;
 import com.iinmorus.engine.SoundManager;
-import com.iinmorus.gtc.Game;
 import com.iinmorus.gtc.entity.Cherry;
 import com.iinmorus.gtc.entity.Drawable;
 import com.iinmorus.gtc.entity.Snake;
 import com.iinmorus.gtc.entity.Walls;
+import static com.iinmorus.gtc.ui.GameWindow.GAME;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -45,7 +45,7 @@ public class Multiplayer extends GameState{
 	isPaused = false;
 	
         snake_P1 = new Snake(0,0);
-	snake_P2 = new Snake(Renderer.WIDTH/Drawable.SCALE-1, 0);
+	snake_P2 = new Snake(GAME.settings.width/Drawable.SCALE-1, 0);
 	snake_P2.setBaseColor(new Color(112, 219, 112));
         cherry = new Cherry();
         walls = new Walls(Math.round(baseWallAmount*difficulty*0.60F));
@@ -65,7 +65,7 @@ public class Multiplayer extends GameState{
 	    bot.changeGoal(cherry.getLocation());
 	}
 	
-	SoundManager.loop("match", 600, SoundManager.getFrames("match") - 2000);
+	GAME.sounds.loop("match", 600, GAME.sounds.getFrames("match") - 2000);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class Multiplayer extends GameState{
                     
 		    boolean isP1 = false;
 		    if((isP1 = snake_P1.getHead().equals(cherry.getLocation())) || snake_P2.getHead().equals(cherry.getLocation())){
-			SoundManager.play("cherry");
+			GAME.sounds.play("cherry");
 			if(isP1){
 			    score_P1 += baseScore*difficulty;
 			    this.applyEffect(snake_P1);
@@ -102,13 +102,13 @@ public class Multiplayer extends GameState{
                     }
 		    
                 }else{
-		    SoundManager.stop("match");
-		    SoundManager.play("hit");
+		    GAME.sounds.stop("match");
+		    GAME.sounds.play("hit");
 		    isOver = true;
 		}
             }
 	    
-	    if(stateTick%(1000/Engine.TICK_RATE) == 0)
+	    if(stateTick%(1000/GAME.engine.getTickRate()) == 0)
 		time++;
         }
     }
@@ -116,7 +116,7 @@ public class Multiplayer extends GameState{
     @Override
     public void draw(Graphics2D g){
 	g.setColor(backgroung);
-	g.fillRect(0, 0, Renderer.WIDTH, Renderer.HEIGHT);
+	g.fillRect(0, 0, GAME.settings.width, GAME.settings.height);
 	
 	snake_P1.draw(g);
 	snake_P2.draw(g);
@@ -129,15 +129,15 @@ public class Multiplayer extends GameState{
 	g.setColor(snake_P2.getBaseColor());
 	g.drawString("Score: " + score_P2, 10, 40);
 	g.setColor(overColor);
-	g.drawString("Time: " + time, 10, Renderer.HEIGHT-10);
+	g.drawString("Time: " + time, 10, GAME.settings.height-10);
         
 	g.setFont(warningFont);
         if(isOver){
             g.setColor(overColor);
-            g.drawString(overMsg, Renderer.WIDTH/2-g.getFontMetrics(warningFont).stringWidth(overMsg)/2, Renderer.HEIGHT/2);
+            g.drawString(overMsg, GAME.settings.width/2-g.getFontMetrics(warningFont).stringWidth(overMsg)/2, GAME.settings.height/2);
         }else if(isPaused){
 	    g.setColor(pauseColor);
-	    g.drawString(pauseMsg, Renderer.WIDTH/2-g.getFontMetrics(warningFont).stringWidth(pauseMsg)/2, Renderer.HEIGHT/2);
+	    g.drawString(pauseMsg, GAME.settings.width/2-g.getFontMetrics(warningFont).stringWidth(pauseMsg)/2, GAME.settings.height/2);
 	}
     }
 
@@ -204,9 +204,9 @@ public class Multiplayer extends GameState{
     @Override
     public void setPaused(boolean isPaused){
 	this.isPaused = isPaused;
-	if(isPaused) SoundManager.stop("match");
+	if(isPaused) GAME.sounds.stop("match");
 	else{
-	    SoundManager.loop("match", SoundManager.getPosition("match"), 600, SoundManager.getFrames("match") - 2000);
+	    GAME.sounds.loop("match", GAME.sounds.getPosition("match"), 600, GAME.sounds.getFrames("match") - 2000);
 	}
     }
 
@@ -221,7 +221,7 @@ public class Multiplayer extends GameState{
 
     @Override
     public String getStateID() {
-	return Game.MULT;
+	return MULT;
     }
 
 }

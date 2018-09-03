@@ -7,19 +7,25 @@ import java.awt.event.MouseListener;
 
 public class InputListener implements MouseListener, KeyListener{
 
+    private StateManager stateM;
+    
+    protected InputListener(StateManager manager){
+	stateM = manager;
+    }
+    
     @Override
     public void mousePressed(MouseEvent e){
-	StateManager.getCurrentState().mousePressed(e);
+	 stateM.getCurrentState().mousePressed(e);
     }
 
     @Override
     public void keyPressed(KeyEvent e){
-	StateManager.getCurrentState().keyPressed(e);
+	stateM.getCurrentState().keyPressed(e);
     }
 
     @Override
     public void keyReleased(KeyEvent e){
-	StateManager.getCurrentState().keyReleased(e);
+	stateM.getCurrentState().keyReleased(e);
     }
 
     @Override

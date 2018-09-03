@@ -3,58 +3,75 @@ package com.iinmorus.engine;
 import java.awt.Graphics2D;
 import java.util.HashMap;
 
-public abstract class StateManager{
+public class StateManager{
 
-    private static HashMap<String, State> states = new HashMap<>();
-    private static String currentState;
+    private final HashMap<String, State> states;
+    private String currentState;
     
-    public static void startState(String stateID){
+    private final int loadBehaviour;
+    public static final int MANUAL_LOAD=0, REGISTER_LOAD=1, START_LOAD=2;
+ 
+    public StateManager(int loadBehaviour){
+	states = new HashMap<>();
+	this.loadBehaviour = loadBehaviour;
+    }
+    
+    public void registerState(State state){
+	String stateID = state.getStateID();
+	states.put(stateID, state);
+	System.out.println(states);
+	if(loadBehaviour == 1) loadState(stateID);
+    }
+    
+    public void loadState(String stateID){
+	if(!states.containsKey(stateID)) return;
+	states.get(stateID).loadResources();
+    }
+    
+    public void startState(String stateID){
+		System.out.println(states);
 	if(!states.containsKey(stateID)) return;
 	if(currentState != null) states.get(currentState).setPaused(true);
+	if(loadBehaviour == 2) loadState(stateID);
 	states.get(stateID).start();
 	currentState = stateID;
     }
 
-    public static void resumeState(String stateID){
+    public void resumeState(String stateID){
 	if(!states.containsKey(stateID)) return;
 	if(currentState != null) states.get(currentState).setPaused(true);
 	currentState = stateID;
     }
     
-    public static void loadState(State state){
-	String stateID = state.getStateID();
-	state.loadResources();
-	states.put(stateID, state);
-    }
-    
-    public static void removeState(String stateID){
+    public void removeState(String stateID){
 	if(!states.containsKey(stateID)) return;
+	if(currentState.equals(stateID)) return;
 	states.remove(stateID);
     }
     
-    public static <T extends State> T getState(String stateID, Class<T> type){
+    public <T extends State> T getState(String stateID, Class<T> type){
 	assert(states.get(stateID).getClass().isInstance(type)): "State "+stateID+" must be instance of class "+type;
 	return type.cast(states.get(stateID));
     }
     
-    public static State getState(String stateID){
+    public State getState(String stateID){
 	return states.get(stateID);
     }
     
-    public static <T extends State> T getCurrentState(Class<T> type){
+    public <T extends State> T getCurrentState(Class<T> type){
 	assert(states.get(currentState).getClass().isInstance(type)): "Current state must be instance of class "+type;
 	return type.cast(states.get(currentState));
     }
     
-    public static State getCurrentState(){
+    public State getCurrentState(){
 	return states.get(currentState);
     }
     
-    public static void update(){
+    protected void update(){
 	if(currentState != null) states.get(currentState).update();
     }
     
-    public static void draw(Graphics2D g){
+    protected void draw(Graphics2D g){
 	if(currentState != null) states.get(currentState).draw(g);
     }
     

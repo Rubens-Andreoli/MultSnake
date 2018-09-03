@@ -3,10 +3,10 @@ package com.iinmorus.gtc.state;
 import com.iinmorus.engine.Engine;
 import com.iinmorus.engine.Renderer;
 import com.iinmorus.engine.SoundManager;
-import com.iinmorus.gtc.Game;
 import com.iinmorus.gtc.entity.Cherry;
 import com.iinmorus.gtc.entity.Snake;
 import com.iinmorus.gtc.entity.Walls;
+import static com.iinmorus.gtc.ui.GameWindow.GAME;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
@@ -36,7 +36,7 @@ public class Singleplayer extends GameState{
         cherry = new Cherry();
         walls = new Walls(Math.round(baseWallAmount*difficulty*0.60F));
 	
-	SoundManager.loop("match", 600, SoundManager.getFrames("match") - 2000);
+	GAME.sounds.loop("match", 600, GAME.sounds.getFrames("match") - 2000);
     }
 
     @Override
@@ -54,19 +54,19 @@ public class Singleplayer extends GameState{
 		if(!snake.isCollision(walls.isCollidable()? blacklist: snake.getSnakePoints())){
                     snake.move();
                     if(snake.getHead().equals(cherry.getLocation())){
-                        SoundManager.play("cherry");
+                        GAME.sounds.play("cherry");
 			score += baseScore*difficulty;
 			snake.grow();
                         cherry = new Cherry(blacklist);
                     }
                 }else{
-		    SoundManager.stop("match");
-		    SoundManager.play("hit");
+		    GAME.sounds.stop("match");
+		    GAME.sounds.play("hit");
 		    isOver = true;
 		}
             }
 	    	    
-	    if(stateTick%(1000/Engine.TICK_RATE) == 0)
+	    if(stateTick%(1000/GAME.engine.getTickRate()) == 0)
 		time++;
         }
     }
@@ -74,7 +74,7 @@ public class Singleplayer extends GameState{
     @Override
     public void draw(Graphics2D g) {
 	g.setColor(backgroung);
-	g.fillRect(0, 0, Renderer.WIDTH, Renderer.HEIGHT);
+	g.fillRect(0, 0, GAME.settings.width, GAME.settings.height);
 	
 	snake.draw(g);
 	cherry.draw(g);
@@ -85,15 +85,15 @@ public class Singleplayer extends GameState{
 	g.drawString("Score: " + score, 10, 20);
 	g.drawString("Length: " + snake.getTailLenght(), 10, 40);
 	g.setColor(overColor);
-	g.drawString("Time: " + time, 10, Renderer.HEIGHT-10);
+	g.drawString("Time: " + time, 10, GAME.settings.height-10);
 	
 	g.setFont(warningFont);
         if(isOver){
             g.setColor(overColor);
-	    g.drawString(overMsg, Renderer.WIDTH/2-g.getFontMetrics(warningFont).stringWidth(overMsg)/2, Renderer.HEIGHT/2);
+	    g.drawString(overMsg, GAME.settings.width/2-g.getFontMetrics(warningFont).stringWidth(overMsg)/2, GAME.settings.height/2);
         }else if(isPaused){
 	    g.setColor(pauseColor);
-	    g.drawString(pauseMsg, Renderer.WIDTH/2-g.getFontMetrics(warningFont).stringWidth(pauseMsg)/2, Renderer.HEIGHT/2);
+	    g.drawString(pauseMsg, GAME.settings.width/2-g.getFontMetrics(warningFont).stringWidth(pauseMsg)/2, GAME.settings.height/2);
 	}
     }
 
@@ -141,7 +141,7 @@ public class Singleplayer extends GameState{
 
     @Override
     public String getStateID() {
-	return Game.SINGLE;
+	return SINGLE;
     }
 
 }

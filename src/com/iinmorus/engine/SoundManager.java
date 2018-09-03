@@ -10,14 +10,18 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
-public abstract class SoundManager {
+public class SoundManager {
     
-    private static HashMap<String, Clip> clips = new HashMap<String, Clip>();
-    private static float masterVol = 0.7F;
-    private static int gap = 0;
-    private static boolean mute = false;
-	
-    public static void loadMP3(String filepath, String audioID){
+    private final HashMap<String, Clip> clips;
+//    private float masterVol;
+    private int gap;
+    private boolean mute;
+
+    public SoundManager() {
+	clips = new HashMap<String, Clip>();
+    }
+    
+    public void loadMP3(String filepath, String audioID){
 	if(clips.get(audioID) != null) return;
 	Clip clip;
 	try {
@@ -36,13 +40,12 @@ public abstract class SoundManager {
 	    clip = AudioSystem.getClip();
 	    clip.open(dais);
 	    clips.put(audioID, clip);
-	    setVolume(audioID, masterVol);
 	}catch(UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 	    e.printStackTrace();
 	}
     }
     
-    public static void loadWAV(String filepath, String audioID){
+    public void loadWAV(String filepath, String audioID){
 	if(clips.get(audioID) != null) return;
 	Clip clip;
 	try {
@@ -50,17 +53,16 @@ public abstract class SoundManager {
 	    clip = AudioSystem.getClip();
 	    clip.open(ais);
 	    clips.put(audioID, clip);
-	    setVolume(audioID, masterVol);
 	}catch(UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 	    e.printStackTrace();
 	}
     }
 	
-    public static void play(String audioID) {
+    public void play(String audioID) {
     	play(audioID, gap);
     }
 	
-    public static void play(String audioID, int frame) {
+    public void play(String audioID, int frame) {
 	if(mute) return;
 	Clip c = clips.get(audioID);
 	if(c == null) return;
@@ -69,35 +71,35 @@ public abstract class SoundManager {
 	while(!c.isRunning()) c.start();
     }
 	
-    public static void stop(String audioID) {
+    public void stop(String audioID) {
 	if(clips.get(audioID) == null) return;
 	if(clips.get(audioID).isRunning()) clips.get(audioID).stop();
     }
     
-    public static void stopAll(){
+    public void stopAll(){
 	for(Clip clip : clips.values())
 	    if(clip.isRunning()) clip.stop();
     }
 	
-    public static void resume(String audioID) {
+    public void resume(String audioID) {
 	if(mute) return;
 	if(clips.get(audioID).isRunning()) return;
 	clips.get(audioID).start();
     }
 	
-    public static void loop(String audioID) {
+    public void loop(String audioID) {
     	loop(audioID, gap, gap, clips.get(audioID).getFrameLength() - 1);
     }
 	
-    public static void loop(String audioID, int frame) {
+    public void loop(String audioID, int frame) {
     	loop(audioID, frame, gap, clips.get(audioID).getFrameLength() - 1);
     }
 	
-    public static void loop(String audioID, int start, int end) {
+    public void loop(String audioID, int start, int end) {
 	loop(audioID, gap, start, end);
     }
 	
-    public static void loop(String audioID, int frame, int start, int end) {
+    public void loop(String audioID, int frame, int start, int end) {
 	stop(audioID);
 	if(mute) return;
 	clips.get(audioID).setLoopPoints(start, end);
@@ -105,30 +107,35 @@ public abstract class SoundManager {
 	clips.get(audioID).loop(Clip.LOOP_CONTINUOUSLY);
     }
 	
-    public static void setPosition(String audioID, int frame) {
+    public void setPosition(String audioID, int frame) {
 	clips.get(audioID).setFramePosition(frame);
     }
 	
-    public static int getFrames(String audioID) { return clips.get(audioID).getFrameLength(); }
-    public static int getPosition(String audioID) { return clips.get(audioID).getFramePosition(); }
+    public int getFrames(String audioID) { return clips.get(audioID).getFrameLength(); }
+    public int getPosition(String audioID) { return clips.get(audioID).getFramePosition(); }
 	
-    public static void close(String audioID) {
+    public void close(String audioID) {
 	stop(audioID);
 	clips.get(audioID).close();
     }
     
-    public static void setVolume(String audioID, float volume){
+    public void setVolume(String audioID, float volume){
 	FloatControl gainControl = (FloatControl) clips.get(audioID).getControl(FloatControl.Type.MASTER_GAIN);
 	float dB = -80 - (-80*volume);
 	if(dB < 0 || dB > -80)
 	    gainControl.setValue(dB);
     }
     
-    public static void ajustVolume(String audioID, float ajust){
+    public void ajustVolume(String audioID, float ajust){
     	FloatControl gainControl = (FloatControl) clips.get(audioID).getControl(FloatControl.Type.MASTER_GAIN);
 	float dB = gainControl.getValue() + ajust;
 	if(dB < 0 || dB > -80)
 	    gainControl.setValue(dB);
     }
+
+    public void setMute(boolean mute){
+	this.mute = mute;
+    }
+
     
 }

@@ -1,6 +1,7 @@
 package com.iinmorus.gtc.entity;
 
 import com.iinmorus.engine.Renderer;
+import static com.iinmorus.gtc.ui.GameWindow.GAME;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -21,10 +22,10 @@ public class Cherry extends Drawable{
     public Cherry(ArrayList<Point> pointsBlackList){
 	baseColor = new Color(222, 49, 99);
 	Random random = new Random();
-	location = new Point(random.nextInt(Renderer.WIDTH/SCALE), random.nextInt(Renderer.HEIGHT/SCALE));
+	location = new Point(random.nextInt(GAME.settings.width/SCALE), random.nextInt(GAME.settings.height/SCALE));
 	if(pointsBlackList != null){
 	    while(pointsBlackList.contains(location)){
-		location = new Point(random.nextInt(Renderer.WIDTH/SCALE), random.nextInt(Renderer.HEIGHT/SCALE));
+		location = new Point(random.nextInt(GAME.settings.width/SCALE), random.nextInt(GAME.settings.height/SCALE));
 	    }
 	}
 	effect = random.nextInt(5);

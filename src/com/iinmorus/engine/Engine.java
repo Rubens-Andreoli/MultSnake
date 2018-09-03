@@ -5,29 +5,30 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
 
-public class Engine implements Runnable, ActionListener{
+public class Engine implements ActionListener{
     
     //engine configs
-    public static final int FPS = 60;
-    public static final int TICK_RATE = 1000/FPS;
-    private final Timer timer;
+    private int fps;
+    private int ups;
+    private int tickRate;
+
+    //engine status
     private long runTick;
     private boolean running;
     
     //engine parts
-    private final Renderer renderer;
-    private final InputListener input;
+    private Timer timer;
+    private Game game;
 
-    public Engine(){
-	timer = new Timer(TICK_RATE, this);
-	renderer = new Renderer(this);
-	input = new InputListener();
+    public Engine(Game game, int fps, int ups){
+	this.fps = fps;
+	this.ups = ups;
+	tickRate = 1000/ups;
+        this.game = game;
+	timer = new Timer(1000/fps, this);
     }
-
-    @Override
-    public void run(){
-	renderer.addMouseListener(input);
-	renderer.addKeyListener(input);
+ 
+    public void start(){
 	timer.start();
 	running = true;
     }
@@ -39,23 +40,22 @@ public class Engine implements Runnable, ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e){
-	renderer.repaint();
-	
-	StateManager.update();
-	
+        game.renderer.repaint();
+	game.states.update();
+
 	runTick++;
     }
     
     public void draw(Graphics2D g){
-	StateManager.draw(g);
-    }
-
-    public Renderer getRenderer(){
-	return renderer;
+	game.states.draw(g);
     }
 
     public boolean isRunning() {
 	return running;
     }
+
+    public int getFps(){return fps;}
+    public int getUps(){return ups;}
+    public int getTickRate(){return tickRate;} 
 
 }

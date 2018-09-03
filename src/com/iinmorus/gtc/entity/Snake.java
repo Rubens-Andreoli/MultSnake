@@ -1,6 +1,7 @@
 package com.iinmorus.gtc.entity;
 
 import com.iinmorus.engine.Renderer;
+import static com.iinmorus.gtc.ui.GameWindow.GAME;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -54,7 +55,7 @@ public class Snake extends Drawable{
 		    return true;
 		break;
 	    case DOWN:
-		if(head.y +ahead >= Renderer.HEIGHT/SCALE || obstacles.contains(new Point(head.x, head.y+ahead)))  
+		if(head.y +ahead >= GAME.settings.height/SCALE || obstacles.contains(new Point(head.x, head.y+ahead)))  
 		    return true;
 		break;
 	    case LEFT:
@@ -62,7 +63,7 @@ public class Snake extends Drawable{
 		    return true;
 		break;
 	    case RIGHT:
-		if(head.x +ahead >= Renderer.WIDTH/SCALE || obstacles.contains(new Point(head.x+ahead, head.y)))  
+		if(head.x +ahead >= GAME.settings.width/SCALE || obstacles.contains(new Point(head.x+ahead, head.y)))  
 		    return true;
 		break;
 	    }

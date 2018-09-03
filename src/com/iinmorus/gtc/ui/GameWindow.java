@@ -1,35 +1,49 @@
 package com.iinmorus.gtc.ui;
 
-import com.iinmorus.engine.Engine;
+import com.iinmorus.engine.Game;
+import com.iinmorus.engine.Settings;
 import com.iinmorus.engine.State;
-import com.iinmorus.engine.StateManager;
+import com.iinmorus.gtc.state.GameState;
+import com.iinmorus.gtc.state.Idle;
+import com.iinmorus.gtc.state.Multiplayer;
+import com.iinmorus.gtc.state.Singleplayer;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import com.iinmorus.gtc.Game;
-import com.iinmorus.gtc.state.GameState;
-import com.iinmorus.gtc.state.Multiplayer;
-import com.iinmorus.gtc.state.Singleplayer;
 
 public class GameWindow extends JFrame{
     
-    private final Game game;
+    public static final Game GAME;
+    static{
+	Settings s = new Settings.Builder().create();
+	ArrayList<State> states = new ArrayList<>();
+	states.add(new Idle());
+	states.add(new Singleplayer());
+	states.add(new Multiplayer());
+	GAME = new Game(s, states);
+    }
+
+    private Thread gameThread;
     
     public GameWindow(){
-	game = new Game();
+	gameThread = new Thread(GAME);
 	this.init();
     }
     
     private void init(){
 	this.setTitle("GTC!");
 	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	//this.setSize(Renderer.WIDTH+6, Renderer.HEIGHT+28); 
+	//this.setSize(GAME.settings.width+6, GAME.settings.height+28); 
 	this.setResizable(false);
 	//this.setLocationRelativeTo(null);
-	this.setContentPane(game.getContainer());
+	this.setContentPane(GAME);
 	//this.add(engine.getRenderer());
-	
+	//this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	//this.setUndecorated(true);
 	JMenuBar menu = new JMenuBar();
 	    JMenu game = new JMenu("Game");
 		JMenu start = new JMenu("Start");
@@ -55,7 +69,12 @@ public class GameWindow extends JFrame{
 	this.setJMenuBar(menu);
 	this.pack();
 	
-	this.game.start();
+	gameThread.start();
+	try {
+	    gameThread.join();
+	} catch (InterruptedException ex) {
+	    Logger.getLogger(GameWindow.class.getName()).log(Level.SEVERE, null, ex);
+	}
 	
 	/////EXEMPLOS:
 //	StateManager.getState(Game.SINGLE, Singleplayer.class).getScore();		    //Pega score da partida singleplayer
@@ -81,7 +100,6 @@ public class GameWindow extends JFrame{
 //	m.setDifficulty(GameState.HARD);
 //	m.vsBot(true);
 //	StateManager.startState(Game.MULT);
-
 
 	this.setVisible(true);
     
