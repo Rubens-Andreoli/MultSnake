@@ -1,5 +1,6 @@
 package com.iinmorus.engine;
 
+import com.iinmorus.engine.StateManager.LoadBehavior;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
@@ -8,38 +9,26 @@ public class Settings {
 
     public final int height;
     public final int width;
-    public final boolean fullscreen;
     public final boolean antialiasing;
 	
     public final float loadVolume;
     public final boolean mute;
     
-    public final boolean mouse;
-    public final boolean keyboard;
+    public final boolean listenMouse;
+    public final boolean listenKey;
     
-    public final int loadBehaviour;
+    public final LoadBehavior loadBehavior;
     
     private Settings(Builder builder){
 	this.tickRate = builder.tickRate;
-
-	this.fullscreen = builder.fullscreen;
-	if(!builder.fullscreen){
-	    this.height = builder.height;
-	    this.width = builder.width;
-	}else{
-	    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-	    width = (int) screenSize.getWidth();
-	    height = (int) screenSize.getHeight();
-	}
+	this.height = builder.height;
+	this.width = builder.width;
 	this.antialiasing = builder.antialiasing;
-	
 	this.loadVolume = builder.loadVolume;
 	this.mute = builder.mute;
-	this.mouse = builder.mouse;
-	
-	this.keyboard = builder.keyboard;
-	
-	this.loadBehaviour = builder.loadBehaviour;
+	this.listenMouse = builder.mouse;
+	this.listenKey = builder.keyboard;
+	this.loadBehavior = builder.loadBehavior;
     }
  
     public static class Builder{
@@ -47,7 +36,6 @@ public class Settings {
 	
 	private int height = 600;
 	private int width = 700;
-	private boolean fullscreen = false;
 	private boolean antialiasing = true;
 	
 	private float loadVolume = 0.7F;
@@ -56,7 +44,7 @@ public class Settings {
 	private boolean mouse = true;
 	private boolean keyboard = true;
 	
-	private int loadBehaviour = StateManager.REGISTER_LOAD;
+	private LoadBehavior loadBehavior = LoadBehavior.REGISTER;
 
 
 	public Builder setTickRate(int tickRate){
@@ -73,12 +61,7 @@ public class Settings {
 	    this.width = width;
 	    return this;
 	}
-	
-	public Builder isFullscreen(boolean b){
-	    fullscreen = b;
-	    return this;
-	}
-	
+
 	public Builder isAntialiasing(boolean b){
 	    antialiasing = b;
 	    return this;
@@ -104,8 +87,8 @@ public class Settings {
 	    return this;
 	}
 	
-	public Builder setLoadResources(int loadBehaviour){
-	    this.loadBehaviour = loadBehaviour;
+	public Builder setLoadResources(LoadBehavior loadBehavior){
+	    this.loadBehavior = loadBehavior;
 	    return this;
 	}
 	

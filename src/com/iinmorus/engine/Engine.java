@@ -1,19 +1,17 @@
 package com.iinmorus.engine;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
 
-public class Engine extends Container implements Runnable {
-    
-    //engine configs
-    public final Settings settings;
+public class Engine{
+
+    //engine settings
+    private final Game game;
     
     //engine parts
+    private final Thread gameThread;
     public final RenderBuffer renderBuffer;
-    public final Input inputs;
+    public final InputBuffer inputBuffer;
     public final SoundManager sounds;
     public final StateManager states;
 
@@ -21,46 +19,43 @@ public class Engine extends Container implements Runnable {
     private boolean running;
     private String firstState;
 
-    public Engine(Settings settings){
-	this.settings = settings;
+    public Engine(Game game){
+	this.game = game;
 	
 	//initiate parts
+	gameThread = new Thread(new Runnable(){
+	    @Override
+	    public void run() {
+		loop();
+	    }
+	});
 	renderBuffer = new RenderBuffer(this);
-	sounds = new SoundManager(settings.loadVolume);
-	states = new StateManager(settings.loadBehaviour);
-	inputs = new Input(states);
-	
-	//config parts
-	renderBuffer.setAntialiasing(settings.antialiasing);
-	sounds.setMute(settings.mute);
-	if(settings.mouse) addMouseListener(inputs);
-	if(settings.keyboard) addKeyListener(inputs);
+	sounds = new SoundManager(this);
+	states = new StateManager(this);
+	inputBuffer = new InputBuffer(this);
 
-	//config container
-	Dimension dim = new Dimension(settings.width, settings.height);
-	setPreferredSize(dim);
-	setMaximumSize(dim);
-	setLayout(new BorderLayout());
-        add(renderBuffer, BorderLayout.CENTER);
-        setFocusable(true);
-        requestFocus();
+	//configure parts
+	gameThread.setName("ARCADIA ENGINE v1.0");
+	if(game.settings.listenMouse) renderBuffer.addMouseListener(inputBuffer);
+	if(game.settings.listenKey) renderBuffer.addKeyListener(inputBuffer);
     }
     
-    public void registerStates(ArrayList<State> gameStates, String firstStateID){
+    public void start(ArrayList<State> gameStates, String firstStateID){
+	if(gameStates == null || firstStateID == null) return;
 	firstState = firstStateID;
-	for(State state : gameStates){
+	for(State state : gameStates)
 	    states.registerState(state);
-	}
-    }
- 
-    @Override
-    public void run(){
-	running = true;
 	states.startState(firstState);
-
-	final double TICK_HERTZ = 1000000000 / settings.tickRate;
+        renderBuffer.requestFocus();
+	gameThread.start();
+    }
+    
+    protected void loop(){
+	final double TICK_HERTZ = 1000000000 / game.settings.tickRate;
 	long now;
 	long after;
+	
+	running = true;
 
 	while(running) {
 	    now = System.nanoTime();
@@ -86,7 +81,6 @@ public class Engine extends Container implements Runnable {
 	g.dispose();
     }
 
-    public boolean isRunning(){return running;}    
+    public boolean isRunning(){return running;}
 
-    
 }

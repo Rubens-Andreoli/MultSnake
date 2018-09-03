@@ -1,36 +1,18 @@
-package com.iinmorus.gtc.ui;
+package com.iinmorus.frame;
 
 import com.iinmorus.engine.Engine;
 import com.iinmorus.engine.Settings;
-import com.iinmorus.engine.State;
-import com.iinmorus.gtc.state.GameState;
-import com.iinmorus.gtc.state.Idle;
-import com.iinmorus.gtc.state.Multiplayer;
-import com.iinmorus.gtc.state.Singleplayer;
-import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
 public class GameWindow extends JFrame{
-    
-    public static final Engine ENGINE;
-    static{
-	ArrayList<State> states = new ArrayList<>();
-	states.add(new Idle());
-	states.add(new Singleplayer());
-	states.add(new Multiplayer());
-	Settings s = new Settings.Builder().create();
-	ENGINE = new Engine(s);
-	ENGINE.registerStates(states, GameState.IDLE);
-    }
 
-    private Thread gameThread;
+    public static final Settings SETTINGS = new Settings.Builder().create();
+    public static final Engine ENGINE = new Engine(SETTINGS);
     
     public GameWindow(){
-	gameThread = new Thread(ENGINE);
-	gameThread.setName("GAME");
 	this.init();
     }
     
@@ -38,7 +20,7 @@ public class GameWindow extends JFrame{
 	this.setTitle("GTC!");
 	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	this.setResizable(false);
-	this.setContentPane(ENGINE);
+	this.setContentPane(ENGINE.renderBuffer);
 
 	JMenuBar menu = new JMenuBar();
 	    JMenu game = new JMenu("Game");
@@ -63,9 +45,10 @@ public class GameWindow extends JFrame{
 	menu.add(game);
 	
 	this.setJMenuBar(menu);
+
 	this.pack();
 	
-	gameThread.start();
+	ENGINE.start(null, null);
 
 	/////EXEMPLOS:
 //	GAME.states.getState(GameState.SINGLE, Singleplayer.class).getScore();		    //Pega score da partida singleplayer

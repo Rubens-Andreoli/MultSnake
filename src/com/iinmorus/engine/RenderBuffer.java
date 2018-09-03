@@ -1,5 +1,6 @@
 package com.iinmorus.engine;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -7,13 +8,15 @@ import javax.swing.JPanel;
 
 public class RenderBuffer extends JPanel{
     
-    private Engine engine;
+    private final Engine engine;
     
     private Graphics2D g2d;
     private boolean antialiasing;
   
     protected RenderBuffer(Engine engine){
 	this.engine = engine;
+	setFocusable(true);
+	setPreferredSize(new Dimension(engine.game.settings.width, engine.settings.height));
     }
 
     @Override
@@ -28,6 +31,6 @@ public class RenderBuffer extends JPanel{
 
     public void setAntialiasing(boolean antialiasing) {
 	this.antialiasing = antialiasing;
-    } 
-    
+    }
+
 }

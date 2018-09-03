@@ -1,5 +1,5 @@
 
-package com.iinmorus.gtc.ui;
+package com.iinmorus.frame;
 
 public class Main {
 

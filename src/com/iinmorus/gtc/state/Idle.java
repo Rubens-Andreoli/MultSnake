@@ -1,5 +1,7 @@
 package com.iinmorus.gtc.state;
 
+import static com.iinmorus.frame.GameWindow.ENGINE;
+import static com.iinmorus.frame.GameWindow.SETTINGS;
 import com.iinmorus.gtc.bot.Bot;
 import com.iinmorus.gtc.bot.FastBot;
 import com.iinmorus.gtc.entity.Cherry;
@@ -11,7 +13,6 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import static com.iinmorus.gtc.ui.GameWindow.ENGINE;
 
 public class Idle extends GameState{
     
@@ -39,7 +40,7 @@ public class Idle extends GameState{
 
     @Override
     public void update() {
-        walls.update(cherry.getLocation());
+	walls.update(cherry.getLocation());
 	    
 	if(lastClick!=null && snake.getHead().equals(lastClick)) 
 	    bot.changeGoal(cherry.getLocation());
@@ -56,7 +57,7 @@ public class Idle extends GameState{
     @Override
     public void draw(Graphics2D g) {
 	g.setColor(background);
-	g.fillRect(0, 0, ENGINE.settings.width, ENGINE.settings.height);
+	g.fillRect(0, 0, SETTINGS.width, SETTINGS.height);
 	
 	snake.draw(g);
 	
@@ -65,15 +66,15 @@ public class Idle extends GameState{
 	walls.draw(g);
 	
 	g.setColor(titleColor);
-	g.fillRect(0, 0, ENGINE.settings.width, 52);
+	g.fillRect(0, 0, SETTINGS.width, 52);
 	g.setColor(background);
 	g.setFont(titleFont);
-	g.drawString(title, (ENGINE.settings.width/2-g.getFontMetrics(titleFont).stringWidth(title)/2), 48);
+	g.drawString(title, (SETTINGS.width/2-g.getFontMetrics(titleFont).stringWidth(title)/2), 48);
     }
     
     @Override
     public void mousePressed(MouseEvent e){
-        Point point = new Point(e.getPoint().x/Drawable.SCALE, e.getPoint().y/Drawable.SCALE);
+        Point point = new Point(e.getPoint().x/Drawable.SIZE, e.getPoint().y/Drawable.SIZE);
 	lastClick = point;
 	bot.changeGoal(point);
     }

@@ -14,7 +14,6 @@ import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import static com.iinmorus.gtc.ui.GameWindow.ENGINE;
 
 public class Multiplayer extends GameState{
     private static final long serialVersionUID = 2;
@@ -42,7 +41,7 @@ public class Multiplayer extends GameState{
 	isPaused = false;
 	
         snake_P1 = new Snake(0,0);
-	snake_P2 = new Snake(ENGINE.settings.width/Drawable.SCALE-1, 0);
+	snake_P2 = new Snake(GAME.settings.width/Drawable.SCALE-1, 0);
 	snake_P2.setColor(new Color(112, 219, 112));
         cherry = new Cherry();
         walls = new Walls(Math.round(baseWallAmount*difficulty*0.60F));
@@ -62,14 +61,14 @@ public class Multiplayer extends GameState{
 	    bot.changeGoal(cherry.getLocation());
 	}
 	
-	ENGINE.sounds.loop("match", 600, ENGINE.sounds.getFrames("match") - 2000);
+	GAME.sounds.loop("match", 600, GAME.sounds.getFrames("match") - 2000);
     }
 
     @Override
     public void update(){
 	if(!isOver && !isPaused){
 	    stateTick++;
-	    if(stateTick%ENGINE.settings.tickRate == 0) time++;
+	    if(stateTick%GAME.settings.tickRate == 0) time++;
 	    
 	    walls.update(cherry.getLocation());
 		
@@ -86,7 +85,7 @@ public class Multiplayer extends GameState{
                     
 	        boolean isP1 = false;
 	        if((isP1 = snake_P1.getHead().equals(cherry.getLocation())) || snake_P2.getHead().equals(cherry.getLocation())){
-		    ENGINE.sounds.play("cherry");
+		    GAME.sounds.play("cherry");
 		    if(isP1){
 		        score_P1 += baseScore*difficulty;
 		        applyEffect(snake_P1);
@@ -98,8 +97,8 @@ public class Multiplayer extends GameState{
 		    if(isBot) bot.changeGoal(cherry.getLocation());
                 }    
             }else{
-		ENGINE.sounds.stop("match");
-		ENGINE.sounds.play("hit");
+		GAME.sounds.stop("match");
+		GAME.sounds.play("hit");
 		isOver = true;
 	    }
         }
@@ -108,7 +107,7 @@ public class Multiplayer extends GameState{
     @Override
     public void draw(Graphics2D g){
 	g.setColor(background);
-	g.fillRect(0, 0, ENGINE.settings.width, ENGINE.settings.height);
+	g.fillRect(0, 0, GAME.settings.width, GAME.settings.height);
 	
 	snake_P1.draw(g);
 	snake_P2.draw(g);
@@ -121,15 +120,15 @@ public class Multiplayer extends GameState{
 	g.setColor(snake_P2.getColor());
 	g.drawString("Score: " + score_P2, 10, 40);
 	g.setColor(overColor);
-	g.drawString("Time: " + time, 10, ENGINE.settings.height-10);
+	g.drawString("Time: " + time, 10, GAME.settings.height-10);
         
 	g.setFont(warningFont);
         if(isOver){
             g.setColor(overColor);
-            g.drawString(overMsg, ENGINE.settings.width/2-g.getFontMetrics(warningFont).stringWidth(overMsg)/2, ENGINE.settings.height/2);
+            g.drawString(overMsg, GAME.settings.width/2-g.getFontMetrics(warningFont).stringWidth(overMsg)/2, GAME.settings.height/2);
         }else if(isPaused){
 	    g.setColor(pauseColor);
-	    g.drawString(pauseMsg, ENGINE.settings.width/2-g.getFontMetrics(warningFont).stringWidth(pauseMsg)/2, ENGINE.settings.height/2);
+	    g.drawString(pauseMsg, GAME.settings.width/2-g.getFontMetrics(warningFont).stringWidth(pauseMsg)/2, GAME.settings.height/2);
 	}
     }
 
@@ -196,9 +195,9 @@ public class Multiplayer extends GameState{
     @Override
     public void setPaused(boolean isPaused){
 	this.isPaused = isPaused;
-	if(isPaused) ENGINE.sounds.stop("match");
+	if(isPaused) GAME.sounds.stop("match");
 	else{
-	    ENGINE.sounds.loop("match", ENGINE.sounds.getPosition("match"), 600, ENGINE.sounds.getFrames("match") - 2000);
+	    GAME.sounds.loop("match", GAME.sounds.getPosition("match"), 600, GAME.sounds.getFrames("match") - 2000);
 	}
     }
 

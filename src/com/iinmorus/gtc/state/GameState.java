@@ -1,11 +1,11 @@
 package com.iinmorus.gtc.state;
 
 import com.iinmorus.engine.State;
+import static com.iinmorus.frame.GameWindow.ENGINE;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.io.Serializable;
-import static com.iinmorus.gtc.ui.GameWindow.ENGINE;
 
 public abstract class GameState implements State, Serializable{
     public static final int EASY=1, MEDIUM=2, HARD=3;

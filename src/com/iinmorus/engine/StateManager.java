@@ -1,5 +1,7 @@
 package com.iinmorus.engine;
 
+import static com.iinmorus.engine.StateManager.LoadBehavior.REGISTER;
+import static com.iinmorus.engine.StateManager.LoadBehavior.START;
 import java.awt.Graphics2D;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,17 +11,19 @@ import java.util.HashMap;
 
 public class StateManager{
 
-    public static final int MANUAL_LOAD=0, REGISTER_LOAD=1, START_LOAD=2;
-    private final int loadBehaviour;
-    
+    public static enum LoadBehavior{
+	MANUAL, REGISTER, START;
+    }
+
+    private LoadBehavior loadBehavior;
     private final HashMap<String, State> states;
     private String currentState;
  
-    public StateManager(final int loadBehaviour){
+    public StateManager(Engine engine){
 	states = new HashMap<>();
-	this.loadBehaviour = loadBehaviour;
+	this.loadBehavior = engine.settings.loadBehavior;
     }
-    
+
     public void loadResources(String stateID){
 	if(!states.containsKey(stateID)) return;
 	states.get(stateID).loadResources();
@@ -29,18 +33,14 @@ public class StateManager{
 	String stateID = state.getStateID();
 	if(!states.containsKey(stateID)){
 	    states.put(stateID, state);
-	    if(loadBehaviour == 1) loadResources(stateID);
+	    if(loadBehavior == REGISTER) loadResources(stateID);
 	}
     }
     
     public void startState(String stateID){
 	if(!states.containsKey(stateID)) return;
-	if(loadBehaviour == 2) loadResources(stateID);
-	if(currentState != null){
-            String temp = currentState;
-            currentState = null;
-            states.get(temp).unload();
-        }
+	if(loadBehavior == START) loadResources(stateID);
+	if(currentState != null) states.get(currentState).unload();
 	states.get(stateID).start();
 	currentState = stateID;
     }
@@ -61,11 +61,7 @@ public class StateManager{
 
     public void resumeState(String stateID){
 	if(!states.containsKey(stateID)) return;
-	if(currentState != null){
-            String temp = currentState;
-            currentState = null;
-            states.get(temp).unload();
-        };
+	if(currentState != null) states.get(currentState).unload();
 	currentState = stateID;
     }
     

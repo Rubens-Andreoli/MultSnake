@@ -1,11 +1,11 @@
 package com.iinmorus.gtc.entity;
 
+import static com.iinmorus.frame.GameWindow.SETTINGS;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
-import static com.iinmorus.gtc.ui.GameWindow.ENGINE;
 
 public class Snake extends Drawable{
     
@@ -54,7 +54,7 @@ public class Snake extends Drawable{
 		    return true;
 		break;
 	    case DOWN:
-		if(head.y +ahead >= ENGINE.settings.height/SCALE || obstacles.contains(new Point(head.x, head.y+ahead)))  
+		if(head.y +ahead >= SETTINGS.height/SIZE || obstacles.contains(new Point(head.x, head.y+ahead)))  
 		    return true;
 		break;
 	    case LEFT:
@@ -62,7 +62,7 @@ public class Snake extends Drawable{
 		    return true;
 		break;
 	    case RIGHT:
-		if(head.x +ahead >= ENGINE.settings.width/SCALE || obstacles.contains(new Point(head.x+ahead, head.y)))  
+		if(head.x +ahead >= SETTINGS.width/SIZE || obstacles.contains(new Point(head.x+ahead, head.y)))  
 		    return true;
 		break;
 	    }
@@ -97,11 +97,11 @@ public class Snake extends Drawable{
     @Override
     public void draw(Graphics2D g){
 	g.setColor(color.darker());
-	g.fillRect(head.x*SCALE, head.y*SCALE, SCALE, SCALE);
+	g.fillRect(head.x*SIZE, head.y*SIZE, SIZE, SIZE);
 
 	for(Point point : snakeParts){
 	    g.setColor(new Random().nextBoolean() ? color.brighter().brighter() : color.brighter());
-	    g.fillRect(point.x*SCALE, point.y*SCALE, SCALE, SCALE);
+	    g.fillRect(point.x*SIZE, point.y*SIZE, SIZE, SIZE);
 	}
     }
 
