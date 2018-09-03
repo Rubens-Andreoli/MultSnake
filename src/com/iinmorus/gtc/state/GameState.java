@@ -1,6 +1,6 @@
 package com.iinmorus.gtc.state;
 
-import com.iinmorus.engine.State;
+import com.iinmorus.engine2d.State;
 import static com.iinmorus.gtc.ui.GameWindow.GAME;
 import java.awt.Color;
 import java.awt.Font;

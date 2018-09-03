@@ -7,9 +7,20 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="MultSnake_0.5.1" default="default" basedir=".">
-    <description>Builds, tests, and runs the project MultSnake 0.5.1.</description>
+<project name="MultSnake_0.5.2" default="default" basedir=".">
+    <description>Builds, tests, and runs the project MultSnake 0.5.2.</description>
     <import file="nbproject/build-impl.xml"/>
+    <!--<target name="-post-jar">
+      <zipfileset src="${dist.jar}" excludes="META-INF/*" />
+      <zipfileset src="lib/mp3spi1.9.5.jar" excludes="META-INF/*" />
+      <zipfileset src="lib/jl1.0.1.jar" excludes="META-INF/*" />
+      <zipfileset src="lib/tritonus_share.jar" excludes="META-INF/*" />
+      <manifest>
+        <attribute name="Main-Class" value="com.iinmorus.gtc.ui.Main"/>
+      </manifest>
+    </jar>
+  </target>-->
+    
     <!--
 
     There exist several targets which are by default empty and which can be 
@@ -58,7 +69,7 @@
 
     An example of overriding the target for project execution could look like this:
 
-        <target name="run" depends="MultSnake_0.5.1-impl.jar">
+        <target name="run" depends="MultSnake_0.5.2-impl.jar">
             <exec dir="bin" executable="launcher.exe">
                 <arg file="${dist.jar}"/>
             </exec>

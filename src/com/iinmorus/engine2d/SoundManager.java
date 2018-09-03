@@ -1,4 +1,4 @@
-package com.iinmorus.engine;
+package com.iinmorus.engine2d;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -71,7 +71,7 @@ public class SoundManager {
 	if(c == null) return;
 	if(c.isRunning()) c.stop();
 	c.setFramePosition(frame);
-	while(!c.isRunning()) c.start();
+	c.start();
     }
 	
     public void stop(String audioID) {

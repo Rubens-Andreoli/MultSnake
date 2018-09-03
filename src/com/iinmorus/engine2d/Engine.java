@@ -1,4 +1,4 @@
-package com.iinmorus.engine;
+package com.iinmorus.engine2d;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
@@ -15,24 +15,24 @@ public class Engine extends Container implements Runnable, ActionListener{
     public final Settings settings;
     
     //engine parts
-    private final Timer timer;
+    private final Timer renderTimer;
+    private final Timer updateTimer;
     public final Renderer renderer;
     public final SoundManager sounds;
     public final StateManager states;
     public final InputListener inputs;
 
     //engine status
-    private long renderTick;
-    private long updateTick;
     private boolean running;
 
     public Engine(Settings settings){
 	this.settings = settings;
 	
 	//parts
-	timer = new Timer(settings.renderRate, this);
+	updateTimer = new Timer(settings.updateRate, this);
 	renderer = new Renderer(this);
 	renderer.setAntialiasing(settings.antialiasing);
+	renderTimer = new Timer(settings.renderRate, renderer);
 	sounds = new SoundManager(settings.loadVolume);
 	sounds.setMute(settings.mute);
 	states = new StateManager(settings.loadBehaviour);
@@ -57,33 +57,26 @@ public class Engine extends Container implements Runnable, ActionListener{
  
     @Override
     public void run(){
-	timer.start();
+	renderTimer.start();
+	updateTimer.start();
 	running = true;
     }
     
     public void stop(){
-	timer.stop();
+	renderTimer.stop();
+	updateTimer.stop();
 	running = false;
     }
 
     @Override
     public void actionPerformed(ActionEvent e){
-        renderer.repaint();
-
-	if(renderTick%(settings.fps/settings.ups) == 0){
-	    states.update();
-	    updateTick++;
-	}
-	
-	renderTick++;
+	states.update();
     }
     
-    protected void draw(Graphics2D g){
+    protected void render(Graphics2D g){
 	states.draw(g);
     }
 
     public boolean isRunning(){return running;}    
-    public long getRenderTick(){return renderTick;}
-    public long getUpdateTick(){return updateTick;}   
     
 }

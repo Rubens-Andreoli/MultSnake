@@ -1,4 +1,4 @@
-package com.iinmorus.engine;
+package com.iinmorus.engine2d;
 
 import java.awt.Graphics2D;
 import java.util.HashMap;

@@ -102,7 +102,7 @@ public class Multiplayer extends GameState{
 		isOver = true;
 	    }
 	    
-	    if(stateTick%(1000/GAME.settings.updateRate) == 0) time++;
+	    if(stateTick%GAME.settings.ups == 0) time++;
         }
     }
 

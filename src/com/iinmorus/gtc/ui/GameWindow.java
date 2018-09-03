@@ -1,8 +1,9 @@
 package com.iinmorus.gtc.ui;
 
-import com.iinmorus.engine.Engine;
-import com.iinmorus.engine.Settings;
-import com.iinmorus.engine.State;
+import com.iinmorus.engine2d.Engine;
+import com.iinmorus.engine2d.Settings;
+import com.iinmorus.engine2d.State;
+import com.iinmorus.gtc.state.GameState;
 import com.iinmorus.gtc.state.Idle;
 import com.iinmorus.gtc.state.Multiplayer;
 import com.iinmorus.gtc.state.Singleplayer;
@@ -13,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.SwingUtilities;
 
 public class GameWindow extends JFrame{
     
@@ -24,26 +26,27 @@ public class GameWindow extends JFrame{
 	states.add(new Singleplayer());
 	states.add(new Multiplayer());
 	GAME = new Engine(s);
-	GAME.registerStates(states, "idle");
+	GAME.registerStates(states, GameState.IDLE);
     }
 
     private Thread gameThread;
     
     public GameWindow(){
+	//SwingUtilities.invokeLater(GAME);
 	gameThread = new Thread(GAME);
+	gameThread.setName("GAME");
 	this.init();
     }
     
     private void init(){
 	this.setTitle("GTC!");
 	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	//this.setSize(GAME.settings.width+6, GAME.settings.height+28); 
 	this.setResizable(false);
-	//this.setLocationRelativeTo(null);
 	this.setContentPane(GAME);
-	//this.add(engine.getRenderer());
-	//this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-	//this.setUndecorated(true);
+	if(GAME.settings.fullscreen){
+	    this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	    this.setUndecorated(true);
+	}
 	JMenuBar menu = new JMenuBar();
 	    JMenu game = new JMenu("Game");
 		JMenu start = new JMenu("Start");
@@ -77,29 +80,29 @@ public class GameWindow extends JFrame{
 	}
 	
 	/////EXEMPLOS:
-//	StateManager.getState(Game.SINGLE, Singleplayer.class).getScore();		    //Pega score da partida singleplayer
-//	StateManager.startState(Game.SINGLE);						    //Começa partida
-//	StateManager.getState(Game.SINGLE).setPaused(true);				    //Pausa partida
-//	StateManager.getState(Game.MULT, Multiplayer.class).vsBot(true);		    //Liga bot na partida multiplayer
-//	StateManager.getState(Game.SINGLE).setDifficulty(GameState.HARD);		    //Muda dificuldade da partida
-//	StateManager.getState(Game.MULT, Multiplayer.class).getScore_P1();		    //Pega score do player 1 da partida multiplayer	    
-//	StateManager.loadState(/*loaded state from file*/);				    //Carrega partida salva
+//	GAME.states.getState(GameState.SINGLE, Singleplayer.class).getScore();		    //Pega score da partida singleplayer
+//	GAME.states.startState(GameState.SINGLE);					    //Começa partida
+//	GAME.states.getState(GameState.SINGLE).setPaused(true);				    //Pausa partida
+//	GAME.states.getState(GameState.MULT, Multiplayer.class).vsBot(true);		    //Liga bot na partida multiplayer
+//	GAME.states.getState(GameState.SINGLE).setDifficulty(GameState.HARD);		    //Muda dificuldade da partida
+//	GAME.states.getState(GameState.MULT, Multiplayer.class).getScore_P1();		    //Pega score do player 1 da partida multiplayer	    
+//	GAME.states.loadState(/*loaded state from file*/);				    //Carrega partida salva
         
 	/////COMEÇA UMA PARTIDA EASY SINGLEPLAYER QUE COMEÇA PAUSADA:
-//	State s = StateManager.getState(Game.SINGLE);
+//	State s = GAME.states.getState(GameState.SINGLE);
 //	s.setDifficulty(GameState.EASY);
-//	StateManager.startState(Game.SINGLE);
+//	GAME.states.startState(GameState.SINGLE);
 //	s.setPaused(true);
 
 	/////COMEÇA UMA PARTIDA MEDIUM SINGLEPLAYER
-//	StateManager.getState(Game.SINGLE).setDifficulty(GameState.MEDIUM);
-//	StateManager.startState(Game.SINGLE);
+//	GAME.states.getState(GameState.SINGLE).setDifficulty(GameState.MEDIUM);
+//	GAME.states.startState(GameState.SINGLE);
 
 	/////COMEÇA UMA PARTIDA HARD MULTIPLAYER VS BOT
-//	Multiplayer m = StateManager.getState(Game.MULT, Multiplayer.class);
+//	Multiplayer m = GAME.states.getState(GameState.MULT, Multiplayer.class);
 //	m.setDifficulty(GameState.HARD);
 //	m.vsBot(true);
-//	StateManager.startState(Game.MULT);
+//	GAME.states.startState(GameState.MULT);
 
 	this.setVisible(true);
     

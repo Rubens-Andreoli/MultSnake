@@ -1,6 +1,5 @@
 package com.iinmorus.gtc.entity;
 
-import com.iinmorus.engine.Renderer;
 import static com.iinmorus.gtc.ui.GameWindow.GAME;
 import java.awt.Color;
 import java.awt.Graphics2D;

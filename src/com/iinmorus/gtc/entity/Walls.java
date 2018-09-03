@@ -1,6 +1,5 @@
 package com.iinmorus.gtc.entity;
 
-import com.iinmorus.engine.Renderer;
 import static com.iinmorus.gtc.ui.GameWindow.GAME;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -46,7 +45,7 @@ public class Walls extends Drawable{
 
     @Override
     public void draw(Graphics2D g){
-	g.setColor(collidable ? baseColor : baseColor.darker());
+	g.setColor(collidable ? baseColor : baseColor.darker().darker());
 	walls.stream().forEach((wall) -> {
 		g.fillRect(wall.x*SCALE, wall.y*SCALE, SCALE, SCALE); 
 	});

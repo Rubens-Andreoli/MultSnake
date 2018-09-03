@@ -39,8 +39,6 @@ public class Idle extends GameState{
 
     @Override
     public void update() {
-	stateTick++;
-
 	walls.update(cherry.getLocation());
 	    
 	if(lastClick!=null && snake.getHead().equals(lastClick)) 

@@ -1,4 +1,4 @@
-package com.iinmorus.engine;
+package com.iinmorus.engine2d;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -25,8 +25,8 @@ public class Settings {
     private Settings(Builder builder){
 	this.fps = builder.fps;
 	this.ups = builder.ups;
-	this.renderRate = 1000/builder.fps;
-	this.updateRate = 1000/builder.ups;
+	this.renderRate = (1000/builder.fps)-(int)(builder.fps*0.2); //Attempt to correct Swing Timer failed delay!
+	this.updateRate = (1000/builder.ups)-(int)(builder.ups*0.2);
 	this.fullscreen = builder.fullscreen;
 	if(!builder.fullscreen){
 	    this.height = builder.height;
@@ -46,7 +46,7 @@ public class Settings {
  
     public static class Builder{
 	private int fps = 60;
-	private int ups = 20;
+	private int ups = 15;
 	
 	private int height = 600;
 	private int width = 700;
@@ -62,12 +62,12 @@ public class Settings {
 	private int loadBehaviour = StateManager.REGISTER_LOAD;
 	
 	public Builder setFPS(int fps){
-	    if(fps > ups) this.fps = fps;
+	    if(fps > 0 && fps < 120) this.fps = fps;
 	    return this;
 	}
 	
 	public Builder setUPS(int ups){
-	    if(ups < fps) this.ups = ups;
+	    if(ups > 0 && ups < 60) this.ups = ups;
 	    return this;
 	}
 	
