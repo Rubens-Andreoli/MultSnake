@@ -7,10 +7,11 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="MultSnake_0.5.2" default="default" basedir=".">
-    <description>Builds, tests, and runs the project MultSnake 0.5.2.</description>
+<project name="GTC_0.8.1" default="default" basedir=".">
+    <description>GTC 0.8.1 - Get That Cherry!</description>
     <import file="nbproject/build-impl.xml"/>
-    <!--<target name="-post-jar">
+    <target name="-post-jar">
+    <jar jarfile="dist/gtc_0.8.1.jar">
       <zipfileset src="${dist.jar}" excludes="META-INF/*" />
       <zipfileset src="lib/mp3spi1.9.5.jar" excludes="META-INF/*" />
       <zipfileset src="lib/jl1.0.1.jar" excludes="META-INF/*" />
@@ -18,8 +19,10 @@
       <manifest>
         <attribute name="Main-Class" value="com.iinmorus.gtc.ui.Main"/>
       </manifest>
-    </jar>
-  </target>-->
+      </jar>
+    </target>
+   
+
     
     <!--
 
