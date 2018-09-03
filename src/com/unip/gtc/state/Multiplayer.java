@@ -39,7 +39,7 @@ public class Multiplayer extends GTCState{
 	score_P2 = 0;
 	isOver = false;
 	isPaused = false;
-	
+
         snake_P1 = new Snake(0,0);
 	snake_P2 = new Snake(width/scale-1, 0);
 	snake_P2.setColor(new Color(112, 219, 112));
@@ -208,6 +208,8 @@ public class Multiplayer extends GTCState{
     public void vsBot(boolean isBot){this.isBot = isBot;}
     public int getScore_P1(){return score_P1;}
     public int getScore_P2(){return score_P2;}
+    public int getLength_P1(){return snake_P1.getTailLenght();}
+    public int getLength_P2(){return snake_P2.getTailLenght();}
     public int getTime(){return time;}  
 
     @Override

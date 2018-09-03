@@ -13,16 +13,16 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class SoundManager {
     
     private final HashMap<String, Clip> clips;
-    private final float loadVolume;
+    private float masterVolume;
     private boolean mute;
 
     protected SoundManager(){
 	this(1.0F);
     }
     
-    protected SoundManager(float loadVolume){
+    protected SoundManager(float masterVolume){
         clips = new HashMap<String, Clip>();
-	this.loadVolume = loadVolume;
+	this.masterVolume = masterVolume;
     }
 
     public void load(String filepath, String audioID){
@@ -42,7 +42,7 @@ public class SoundManager {
 	    AudioInputStream dais = AudioSystem.getAudioInputStream(decodeFormat, ais);
 	    Clip c = AudioSystem.getClip();
 	    c.open(dais);
-	    setVolume(c, loadVolume);
+	    setVolume(c, masterVolume);
 	    clips.put(audioID, c);
 	} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 	    e.printStackTrace();
@@ -144,27 +144,46 @@ public class SoundManager {
     }
     
     public void setMasterVolume(float volume){
+	if(masterVolume < 0) masterVolume = 0;
+	else if(masterVolume > 1) masterVolume = 1;
+	
+	if(masterVolume == 0) mute = true;
+	else mute = false;
+	
 	for(Clip c : clips.values()) setVolume(c, volume);
+	masterVolume = volume;
     }
     
-    private void ajustVolume(Clip clip, float ajust){
-	FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-	float dB = gainControl.getValue() + ajust;
-	if(dB > 0) dB = 0;
-	if(dB < -80) dB = -80;
-	gainControl.setValue(dB);
-    }
+//    private void ajustVolume(Clip clip, float ajust){
+//	FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+//	float dB = gainControl.getValue() + ajust;
+//	if(dB > 0) dB = 0;
+//	if(dB < -80) dB = -80;
+//	gainControl.setValue(dB);
+//    }
     
     public void ajustClipVolume(String audioID, float ajust){
     	Clip c = clips.get(audioID);
 	if(c == null) return;
-	ajustVolume(c, ajust);
+	setVolume(c, masterVolume+(ajust)/80);
+	//ajustVolume(c, ajust);
     }
     
     public void ajustMasterVolume(float ajust){
-	for(Clip c : clips.values()) ajustVolume(c, ajust);
+	masterVolume += (ajust)/80;
+	if(masterVolume < 0) masterVolume = 0;
+	else if(masterVolume > 1) masterVolume = 1;
+	
+	if(masterVolume == 0) mute = true;
+	else mute = false;
+
+	for(Clip c : clips.values()) setVolume(c, masterVolume+(ajust)/80); //ajustVolume(c, ajust);
     }
 
+    public float getMasterVolume(){
+	return masterVolume;
+    }
+    
     public void setMute(boolean mute){
 	this.mute = mute;
     }

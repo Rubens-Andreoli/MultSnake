@@ -12,7 +12,7 @@ public class Settings {
     public final Color backgroundColor;
     public final boolean antialiasing;
 	
-    public final float loadVolume;
+    public final float masterVolume;
     
     public final boolean listenMouse;
     public final boolean listenKey;
@@ -26,7 +26,7 @@ public class Settings {
 	this.scale = builder.scale;
 	this.backgroundColor = builder.backgroundColor;
 	this.antialiasing = builder.antialiasing;
-	this.loadVolume = builder.loadVolume;
+	this.masterVolume = builder.masterVolume;
 	this.listenMouse = builder.mouse;
 	this.listenKey = builder.keyboard;
 	this.loadStrategy = builder.loadBehavior;
@@ -41,7 +41,7 @@ public class Settings {
 	private Color backgroundColor = Color.BLACK;
 	private boolean antialiasing = true;
 	
-	private float loadVolume = 0.7F;
+	private float masterVolume = 0.7F;
 	
 	private boolean mouse = true;
 	private boolean keyboard = true;
@@ -81,8 +81,8 @@ public class Settings {
 	    return this;
 	}
 	
-	public Builder setLoadVolume(float volume){
-	    loadVolume = volume;
+	public Builder setMasterVolume(float volume){
+	    masterVolume = volume;
 	    return this;
 	}
 	

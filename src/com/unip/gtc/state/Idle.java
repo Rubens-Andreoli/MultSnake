@@ -84,8 +84,8 @@ public class Idle extends GTCState{
 
     @Override
     public void keyPressed(KeyEvent e){
-	if(e.getKeyCode() == KeyEvent.VK_EQUALS) engine.sounds.ajustClipVolume("idle", 5F);
-	if(e.getKeyCode() == KeyEvent.VK_MINUS) engine.sounds.ajustClipVolume("idle", -5F);
+	if(e.getKeyCode() == KeyEvent.VK_EQUALS) engine.sounds.ajustMasterVolume(5F);
+	if(e.getKeyCode() == KeyEvent.VK_MINUS) engine.sounds.ajustMasterVolume(-5F);
     }
     
     @Override

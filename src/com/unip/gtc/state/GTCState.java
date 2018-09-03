@@ -82,8 +82,9 @@ public abstract class GTCState extends State{
     }
 
     @Override
-    public boolean isPaused() {
-	return isPaused;
-    }
+    public boolean isPaused(){return isPaused;}
+    
+    public int getDifficulty(){return difficulty;}
+    public boolean isOver(){return isOver;}
     
 }

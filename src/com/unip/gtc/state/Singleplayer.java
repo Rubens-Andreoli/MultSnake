@@ -123,6 +123,7 @@ public class Singleplayer extends GTCState{
     
     public int getScore(){return score;}
     public int getTime(){return time;}
+    public int getLength(){return snake.getTailLenght();}
 
     @Override
     public String getStateID(){

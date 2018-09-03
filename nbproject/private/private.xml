@@ -3,10 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Cloud%20Storage/Google%20Drive/Programing/Linguagens/Java/UNIP/APS%20-%20Game/GTC%200.8.2/src/br/unip/engine/Settings.java</file>
-            <file>file:/D:/Cloud%20Storage/Google%20Drive/Programing/Linguagens/Java/UNIP/APS%20-%20Game/GTC%200.8.2/src/br/unip/engine/Engine.java</file>
-            <file>file:/D:/Cloud%20Storage/Google%20Drive/Programing/Linguagens/Java/UNIP/APS%20-%20Game/GTC%200.8.2/src/com/unip/gtc/state/Singleplayer.java</file>
-            <file>file:/D:/Cloud%20Storage/Google%20Drive/Programing/Linguagens/Java/UNIP/APS%20-%20Game/GTC%200.8.2/src/br/unip/engine/SoundManager.java</file>
+            <file>file:/D:/Cloud%20Storage/Google%20Drive/Programing/Linguagens/Java/UNIP/APS%20-%20Game/GTC%200.8.4/src/com/unip/gtc/state/GTCState.java</file>
+            <file>file:/D:/Cloud%20Storage/Google%20Drive/Programing/Linguagens/Java/UNIP/APS%20-%20Game/GTC%200.8.4/src/com/unip/gtc/state/Multiplayer.java</file>
         </group>
     </open-files>
 </project-private>

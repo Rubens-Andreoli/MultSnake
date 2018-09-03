@@ -30,7 +30,7 @@ public class Engine{
 		loop();
 	    }
 	});
-	sounds = new SoundManager(settings.loadVolume);
+	sounds = new SoundManager(settings.masterVolume);
 	states = new StateManager(settings.loadStrategy);
 	renderer = new Renderer(this);
 	input = new Input(states);
