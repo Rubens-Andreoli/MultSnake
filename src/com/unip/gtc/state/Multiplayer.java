@@ -153,13 +153,6 @@ public class Multiplayer extends GTCState{
 	    case KeyEvent.VK_D:
 		snake_P1.changeDirection(Snake.RIGHT);
 		break;
-	    case KeyEvent.VK_SPACE:
-		if(!isOver) setPaused(!isPaused);
-		break;
-	    case KeyEvent.VK_ESCAPE:
-		start();
-		setPaused(false);
-		break;
 	    case KeyEvent.VK_MINUS:
 		engine.sounds.ajustMasterVolume(-5F);
 		break;

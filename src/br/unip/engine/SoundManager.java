@@ -16,10 +16,14 @@ public class SoundManager {
     private final float loadVolume;
     private boolean mute;
 
+    protected SoundManager(){
+	this(1.0F);
+    }
+    
     protected SoundManager(float loadVolume){
         clips = new HashMap<String, Clip>();
 	this.loadVolume = loadVolume;
-   }
+    }
 
     public void load(String filepath, String audioID){
 	if(clips.get(audioID) != null) return;
@@ -42,9 +46,7 @@ public class SoundManager {
 	    clips.put(audioID, c);
 	} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 	    e.printStackTrace();
-	}/*finally{
-	    System.gc(); //workaround to close audio stream, ais.close doesn't free memory...
-	}*/
+	}
     }
 	
     public void play(String audioID) {

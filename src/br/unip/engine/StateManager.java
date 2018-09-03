@@ -61,6 +61,15 @@ public class StateManager{
 	currentState = stateID;
     }
     
+    public void restartCurrentState(){
+	if(currentState != null) states.get(currentState).start();
+    }
+    
+    public void togglePauseCurrentState(){
+	if(currentState != null)
+	    states.get(currentState).setPaused(!states.get(currentState).isPaused());
+    }
+    
     public void removeState(String stateID){
 	if(!states.containsKey(stateID)) return;
 	if(currentState.equals(stateID)) return;

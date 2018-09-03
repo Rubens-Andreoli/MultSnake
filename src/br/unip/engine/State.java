@@ -16,7 +16,7 @@ public abstract class State implements Serializable{
     public abstract String getStateID();
     
     protected abstract void loadResources();
-    public abstract void start();
+    protected abstract void start();
     protected abstract void update();
     protected abstract void draw(Graphics2D g);
     public abstract void setPaused(boolean isPaused);

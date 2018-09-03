@@ -109,13 +109,6 @@ public class Singleplayer extends GTCState{
 	    case KeyEvent.VK_RIGHT:
 		snake.changeDirection(Snake.RIGHT);
 		break;
-	    case KeyEvent.VK_SPACE:
-		if(!isOver) setPaused(!isPaused);
-		break;
-	    case KeyEvent.VK_ESCAPE:
-		start();
-		setPaused(false);
-		break;
 	    case KeyEvent.VK_MINUS:
 		engine.sounds.ajustMasterVolume(-5F);
 		break;
