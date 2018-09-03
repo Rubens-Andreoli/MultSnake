@@ -1,32 +1,34 @@
 package com.iinmorus.multsnake.ui;
 
-import com.iinmorus.multsnake.engine.Config;
+import com.iinmorus.multsnake.bot.Bot;
 import com.iinmorus.multsnake.engine.Engine;
+import com.iinmorus.multsnake.engine.Renderer;
+import com.iinmorus.multsnake.state.Multiplayer;
+import com.iinmorus.multsnake.state.Singleplayer;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
-public class GameWindow extends JFrame {
-
+public class GameWindow extends JFrame{
+    
     private final Engine engine;
     private final Thread gameThread;
     
     public GameWindow(){
-	this.engine = new Engine();
-	this.gameThread = new Thread(engine);
-	this.configFrame();
+	engine = new Engine();
+	gameThread = new Thread(engine);
+	this.init();
     }
     
-    private void configFrame(){
-    	this.setTitle("Snake");
+    private void init(){
+	this.setTitle("GTC");
 	this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	this.setSize(Config.WIDTH+5, Config.HEIGHT+50);
+	//this.setSize(Renderer.WIDTH+6, Renderer.HEIGHT+28); 
 	this.setResizable(false);
-	this.setLocationRelativeTo(null);
-	this.addMouseListener(engine);
-	this.add(engine.getRenderer());
-	//this.addKeyListener(engine);
+	//this.setLocationRelativeTo(null);
+	this.setContentPane(engine.getRenderer());
+	//this.add(engine.getRenderer());
 	
 	JMenuBar menu = new JMenuBar();
 	    JMenu game = new JMenu("Game");
@@ -52,9 +54,19 @@ public class GameWindow extends JFrame {
 	
 	this.setJMenuBar(menu);
 	
+	
+	this.pack();
 	this.setVisible(true);
+	
+	/////EXEMPLOS:
+	//engine.getStateManager().getState(1, Singleplayer.class).getScore();
+	//engine.getStateManager().setState(1);
+	//engine.getStateManager().getState(1, Singleplayer.class).setPaused(true);
+	//engine.getStateManager().getState(2, Multiplayer.class).vsBot(Bot.EASY);
+	//engine.getStateManager().getState(2, Multiplayer.class).getScore_P1();
+	//engine.getStateManager().loadState(/*load state from file*/);
     }
-
+    
     public void startEngine(){
 	gameThread.start();
     }
