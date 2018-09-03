@@ -3,15 +3,9 @@ package com.iinmorus.engine;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.Timer;
 
 public class Engine implements Runnable, ActionListener{
-    
-    //timed events
-    private static final HashMap<Integer, ArrayList<TimedEvent>> EVENTS = new HashMap<>();
     
     //engine configs
     public static final int FPS = 60;
@@ -28,8 +22,6 @@ public class Engine implements Runnable, ActionListener{
 	timer = new Timer(TICK_RATE, this);
 	renderer = new Renderer(this);
 	input = new InputListener();
-	SoundManager.init();
-	StateManager.init();
     }
 
     @Override
@@ -44,37 +36,12 @@ public class Engine implements Runnable, ActionListener{
 	timer.stop();
 	running = false;
     }
-    
-    public static void addEvent(TimedEvent event){
-	int interval = event.getInterval();
-	if(EVENTS.containsKey(interval))
-	    EVENTS.get(interval).add(event);
-	else{
-	    ArrayList<TimedEvent> eventList = new ArrayList<>();
-	    eventList.add(event);
-	    EVENTS.put(interval, eventList);
-	}
-    }
-    
-    public static void removeEvent(TimedEvent event){
-	int interval = event.getInterval();
-	EVENTS.get(interval).remove(event);
-	if(EVENTS.get(interval).isEmpty())
-	    EVENTS.remove(interval);
-    }
 
     @Override
     public void actionPerformed(ActionEvent e){
 	renderer.repaint();
 	
 	StateManager.update();
-
-	for(Map.Entry entry : EVENTS.entrySet()){
-	    if(runTick%((int)entry.getKey()/TICK_RATE) == 0){
-		for(TimedEvent te : (ArrayList<TimedEvent>)entry.getValue())
-		    te.doEvent();
-	    }
-	}
 	
 	runTick++;
     }

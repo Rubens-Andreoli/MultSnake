@@ -45,7 +45,7 @@ public class Walls extends Drawable{
 
     @Override
     public void draw(Graphics2D g){
-	g.setColor(collidable ? baseColor : baseColor.darker());
+	g.setColor(collidable ? baseColor : baseColor.darker().darker());
 	walls.stream().forEach((wall) -> {
 		g.fillRect(wall.x*SCALE, wall.y*SCALE, SCALE, SCALE); 
 	});

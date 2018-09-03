@@ -3,7 +3,6 @@ package com.iinmorus.gtc.ui;
 import com.iinmorus.engine.Engine;
 import com.iinmorus.engine.State;
 import com.iinmorus.engine.StateManager;
-import com.iinmorus.engine.TimedEvent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -83,19 +82,6 @@ public class GameWindow extends JFrame{
 //	m.vsBot(true);
 //	StateManager.startState(Game.MULT);
 
-	////ADICIONA UM EVENTO QUE ACONTECE A CADA MINUTO:
-//        TimedEvent te = new TimedEvent(){
-//            @Override
-//            public void doEvent() {
-//                System.out.println("|TESTE| Every 1Min");
-//            }
-//
-//	    @Override
-//	    public int getInterval() {
-//		return 60000;
-//	    }
-//        };
-//        Engine.addEvent(te);
 
 	this.setVisible(true);
     

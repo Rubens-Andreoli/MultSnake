@@ -5,12 +5,8 @@ import java.util.HashMap;
 
 public abstract class StateManager{
 
-    private static HashMap<String, State> states;
+    private static HashMap<String, State> states = new HashMap<>();
     private static String currentState;
-    
-    public static void init(){
-	states = new HashMap<>();
-    }
     
     public static void startState(String stateID){
 	if(!states.containsKey(stateID)) return;

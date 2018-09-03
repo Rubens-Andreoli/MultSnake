@@ -12,14 +12,10 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 public abstract class SoundManager {
     
-    private static HashMap<String, Clip> clips;
+    private static HashMap<String, Clip> clips = new HashMap<String, Clip>();
     private static float masterVol = 0.7F;
     private static int gap = 0;
     private static boolean mute = false;
-	
-    public static void init() {
-	clips = new HashMap<String, Clip>();
-    }
 	
     public static void loadMP3(String filepath, String audioID){
 	if(clips.get(audioID) != null) return;
