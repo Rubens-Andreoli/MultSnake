@@ -45,7 +45,7 @@ public class Multiplayer extends GTCState{
 	snake_P2.setColor(new Color(112, 219, 112));
         cherry = new Cherry();
         walls = new Walls(difficulty);
-	isBot = true;
+//	isBot = true;
 	if(isBot){
 	    bot = new Bot(snake_P2, difficulty);
 	    bot.changeGoal(cherry.getLocation());
