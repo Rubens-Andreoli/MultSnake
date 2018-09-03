@@ -4,9 +4,9 @@ import br.unip.engine.Engine;
 import br.unip.engine.Game;
 import br.unip.engine.Settings;
 import br.unip.engine.State;
-import com.unip.gtc.state.Idle;
-import com.unip.gtc.state.Multiplayer;
-import com.unip.gtc.state.Singleplayer;
+import br.unip.gtc.state.Idle;
+import br.unip.gtc.state.Multiplayer;
+import br.unip.gtc.state.Singleplayer;
 import java.util.ArrayList;
 import java.util.List;
 

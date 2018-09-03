@@ -50,7 +50,7 @@ public class GameWindow extends JFrame implements KeyListener{
 	this.pack();
 	engine.renderer.addKeyListener(this);
 	engine.start();
-
+	
 	this.setVisible(true);
     
     }
@@ -72,10 +72,15 @@ public class GameWindow extends JFrame implements KeyListener{
 		engine.states.startState(GTC.IDLE);
 		break;
 	    case KeyEvent.VK_SPACE:
-		engine.states.togglePauseCurrentState();
+		if(engine.states.getCurrentState().getStateID() != GTC.IDLE)
+		    engine.states.togglePauseCurrentState();
 		break;
 	    case KeyEvent.VK_ESCAPE:
 		engine.states.restartCurrentState();
+		break;
+	    case KeyEvent.VK_V:
+		Volume volume = new Volume(engine.sounds);
+		volume.setVisible(!volume.isVisible());
 		break;
 	}
     }

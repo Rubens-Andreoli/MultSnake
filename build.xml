@@ -7,11 +7,11 @@
 <!-- the Compile on Save feature is turned off for the project. -->
 <!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
 <!-- in the project's Project Properties dialog box.-->
-<project name="GTC_0.8.4" default="default" basedir=".">
-    <description>GTC 0.8.4 - Get That Cherry!</description>
+<project name="GTC_0.8.5" default="default" basedir=".">
+    <description>GTC 0.8.5 - Get That Cherry!</description>
     <import file="nbproject/build-impl.xml"/>
     <target name="-post-jar">
-    <jar jarfile="dist/gtc0.8.4.jar">
+    <jar jarfile="dist/gtc0.8.5.jar">
       <zipfileset src="${dist.jar}" excludes="META-INF/*" />
       <zipfileset src="lib/mp3spi1.9.5.jar" excludes="META-INF/*" />
       <zipfileset src="lib/jl1.0.1.jar" excludes="META-INF/*" />
