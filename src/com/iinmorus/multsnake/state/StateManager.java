@@ -12,6 +12,8 @@ public class StateManager implements MouseListener, KeyListener{
     private ArrayList<State> states;
     private int currentState;
     
+    public static final int EASY=1, MEDIUM=2, HARD=3;
+    
     public static final int IDLE_STATE = 0;
     public static final int SINGLE_STATE = 1;
     public static final int MULTI_STATE = 2;
@@ -50,33 +52,33 @@ public class StateManager implements MouseListener, KeyListener{
     }
     
     @Override
-    public void mousePressed(MouseEvent e) {
+    public void mousePressed(MouseEvent e){
 	states.get(currentState).mousePressed(e);
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
+    public void keyPressed(KeyEvent e){
 	states.get(currentState).keyPressed(e);
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
+    public void keyReleased(KeyEvent e){
 	states.get(currentState).keyReleased(e);
     }
 
     @Override
-    public void mouseClicked(MouseEvent e) {}
+    public void mouseClicked(MouseEvent e){}
 
     @Override
-    public void mouseReleased(MouseEvent e) {}
+    public void mouseReleased(MouseEvent e){}
 
     @Override
-    public void mouseEntered(MouseEvent e) {}
+    public void mouseEntered(MouseEvent e){}
 
     @Override
-    public void mouseExited(MouseEvent e) {}
+    public void mouseExited(MouseEvent e){}
 
     @Override
-    public void keyTyped(KeyEvent e) {}
+    public void keyTyped(KeyEvent e){}
     
 }

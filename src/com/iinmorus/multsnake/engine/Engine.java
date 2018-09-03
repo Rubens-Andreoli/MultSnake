@@ -9,8 +9,8 @@ import javax.swing.Timer;
 
 public class Engine implements Runnable, ActionListener{
     
-    public static final ArrayList<TimedEvent> EVERY_MINUTE = new ArrayList<>();
-    public static final ArrayList<TimedEvent> EVERY_30SEC = new ArrayList<>();
+    public final ArrayList<TimedEvent> EVERY_MINUTE = new ArrayList<>();
+    public final ArrayList<TimedEvent> EVERY_30SEC = new ArrayList<>();
     
     public static final int FPS = 60;
     public static final int TICK_RATE = 1000/FPS;
@@ -32,26 +32,25 @@ public class Engine implements Runnable, ActionListener{
 	renderer.addKeyListener(sManager);
 	timer.start();
     }
-
     @Override
     public void actionPerformed(ActionEvent e){
-	runTick++;
+	renderer.repaint();
 	
 	sManager.update();
-			
-	if((runTick/FPS)%500 == 0){
+
+        if(runTick%(30000/TICK_RATE) == 0){
 	    EVERY_30SEC.stream().forEach((te) -> {
 		te.doEvent();
 	    });
 	}
-	
-	if((runTick/FPS)%1000 == 0){
+
+	if(runTick%(60000/TICK_RATE) == 0){
 	    EVERY_MINUTE.stream().forEach((te) -> {
 		te.doEvent();
 	    });
 	}
 	
-	renderer.repaint();
+	runTick++;
     }
     
     public void draw(Graphics g){

@@ -14,7 +14,11 @@ public class Renderer extends JPanel{
     
     public Renderer(Engine engine){
 	this.engine = engine;
-	this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+        this.configRenderer();
+    }
+    
+    private void configRenderer(){
+        this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
 	this.setFocusable(true);
         this.requestFocus();
     }

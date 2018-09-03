@@ -1,10 +1,7 @@
 package com.iinmorus.multsnake.ui;
 
-import com.iinmorus.multsnake.bot.Bot;
 import com.iinmorus.multsnake.engine.Engine;
-import com.iinmorus.multsnake.engine.Renderer;
-import com.iinmorus.multsnake.state.Multiplayer;
-import com.iinmorus.multsnake.state.Singleplayer;
+import com.iinmorus.multsnake.engine.TimedEvent;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -59,12 +56,27 @@ public class GameWindow extends JFrame{
 	this.setVisible(true);
 	
 	/////EXEMPLOS:
-	//engine.getStateManager().getState(1, Singleplayer.class).getScore();
-	//engine.getStateManager().setState(1);
-	//engine.getStateManager().getState(1, Singleplayer.class).setPaused(true);
-	//engine.getStateManager().getState(2, Multiplayer.class).vsBot(Bot.EASY);
-	//engine.getStateManager().getState(2, Multiplayer.class).getScore_P1();
-	//engine.getStateManager().loadState(/*load state from file*/);
+//	engine.getStateManager().getState(1, Singleplayer.class).getScore();
+//	engine.getStateManager().setState(1);
+//	engine.getStateManager().getState(1, Singleplayer.class).setPaused(true);
+//	engine.getStateManager().getState(2, Multiplayer.class).vsBot(StateManager.EASY);
+//	engine.getStateManager().getState(2, Multiplayer.class).getScore_P1();
+//	engine.getStateManager().loadState(/*load state from file*/);
+        
+//        Singleplayer s = engine.getStateManager().getState(StateManager.SINGLE_STATE, Singleplayer.class);
+//        s.setDifficulty(StateManager.EASY);
+//        engine.getStateManager().setState(StateManager.SINGLE_STATE);
+//        s.setPaused(true);
+
+        TimedEvent te = new TimedEvent(){
+            @Override
+            public void doEvent() {
+                System.out.println("TESTE 1Min");
+            }
+        };
+        
+        engine.EVERY_MINUTE.add(te);
+    
     }
     
     public void startEngine(){

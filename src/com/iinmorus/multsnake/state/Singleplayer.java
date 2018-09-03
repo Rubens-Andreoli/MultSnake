@@ -14,14 +14,15 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class Singleplayer extends State{
-
+    private static final long serialVersionUID = 1;
+    
     //ui
     private Color backgroung = Color.BLACK;
     private Color overColor = Color.RED;
     private Color pauseColor = Color.YELLOW;
-    private Font scoreFont = new Font(Font.MONOSPACED, Font.PLAIN, 20);
     private String overMsg = "GAME OVER";
     private String pauseMsg = "PAUSED";
+    private Font scoreFont = new Font(Font.MONOSPACED, Font.PLAIN, 20);
     private Font warningFont = new Font(Font.MONOSPACED, Font.BOLD, 100);
     
     //entities
@@ -30,13 +31,15 @@ public class Singleplayer extends State{
     private Walls walls;
     
     //configs
-    private int wallAmount = 30;
     private int updateTick = 3;
     private int wallRefreshTick = 600;
+    private int baseWallAmount = 30;
+    private int baseScore = 5;
+    private int difficulty = StateManager.EASY;
     
     //status
     private boolean isPaused, isOver;
-    private int score, time;
+    private int score, time, wallAmount;
     
     public Singleplayer(StateManager sManager){
 	super(sManager);
@@ -44,11 +47,12 @@ public class Singleplayer extends State{
 
     @Override
     public void init(){
-	time = 0;
-	isOver = false;
 	stateTick = 0;
-	isPaused = false;
+	time = 0;
 	score = 0;
+	isOver = false;
+	isPaused = false;
+        wallAmount = Math.round(baseWallAmount*difficulty*0.60F);
 	
         snake = new Snake(0,0);
         cherry = new Cherry();
@@ -68,7 +72,7 @@ public class Singleplayer extends State{
 		if(!snake.isCollision(blacklist)){
                     snake.move();
                     if(snake.getHead().equals(cherry.getLocation())){
-                        score+=10;
+                        score += baseScore*difficulty;
 			snake.grow();
                         cherry = new Cherry(blacklist);
                     }
@@ -78,7 +82,7 @@ public class Singleplayer extends State{
             if(stateTick%wallRefreshTick == 0)
                 walls = new Walls(wallAmount, cherry.getLocation());
 	    
-	    if(stateTick%(1000/Engine.FPS) == 0)
+	    if(stateTick%(1000/Engine.TICK_RATE) == 0)
 		time++;
         }
     }
@@ -144,6 +148,8 @@ public class Singleplayer extends State{
 
     @Override
     public void setPaused(boolean isPaused){this.isPaused = isPaused;}
+    
+    public void setDifficulty(int difficulty){this.difficulty = difficulty;}
     
     public int getScore(){return score;}
     public int getTime(){return time;}

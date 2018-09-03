@@ -4,14 +4,15 @@ package com.iinmorus.multsnake.state;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.Serializable;
 
-public abstract class State {
+public abstract class State implements Serializable{
     
     protected StateManager sManager;
     protected long stateTick;
     
-    public State(StateManager sManager){
-	this.sManager = sManager;
+    public State(StateManager stateManager){
+        sManager = stateManager;
     }
     
     public abstract void init();

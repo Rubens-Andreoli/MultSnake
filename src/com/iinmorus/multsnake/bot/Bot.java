@@ -7,8 +7,6 @@ import java.util.ArrayList;
 
 public abstract class Bot {
     
-    public static final int EASY=0, MEDIUM=1, HARD=2;
-    
     protected Point goal;
     
     protected final Snake snake;

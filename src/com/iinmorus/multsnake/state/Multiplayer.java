@@ -18,14 +18,15 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 public class Multiplayer extends State{
+    private static final long serialVersionUID = 1;
     
     //ui
     private Color backgroung = Color.BLACK;
     private Color overColor = Color.RED;
     private Color pauseColor = Color.YELLOW;
-    private Font scoreFont = new Font(Font.MONOSPACED, Font.PLAIN, 20);
     private String overMsg = "GAME OVER";
     private String pauseMsg = "PAUSED";
+    private Font scoreFont = new Font(Font.MONOSPACED, Font.PLAIN, 20);
     private Font warningFont = new Font(Font.MONOSPACED, Font.BOLD, 100);
     
     //entities
@@ -36,14 +37,15 @@ public class Multiplayer extends State{
     private Bot bot;
     
     //configs
-    private int wallAmount = 30;
     private int updateTick = 3;
     private int wallRefreshTick = 600;
-    private int botDifficulty = 0;
+    private int baseWallAmount = 30;
+    private int baseScore = 5;
+    private int difficulty = StateManager.EASY;
     
     //status
     private boolean isPaused, isOver, isBot;
-    private int score_P1, score_P2, time;
+    private int score_P1, score_P2, time, wallAmount;
 
     public Multiplayer(StateManager sManager){
 	super(sManager);
@@ -52,14 +54,14 @@ public class Multiplayer extends State{
     @Override
     public void init(){
 	isBot = true; //REMOVE: testing...
-	botDifficulty = 1;
 	
-	isOver = false;
 	stateTick = 0;
 	time = 0;
-	isPaused = false;
 	score_P1 = 0;
 	score_P2 = 0;
+	isOver = false;
+	isPaused = false;
+	wallAmount = Math.round(baseWallAmount*difficulty*0.60F);
 	
         snake_P1 = new Snake(0,0);
 	snake_P2 = new Snake(Renderer.WIDTH/Renderer.SCALE-1, 0);
@@ -68,14 +70,14 @@ public class Multiplayer extends State{
         walls = new Walls(wallAmount, cherry.getLocation());
 	
 	if(isBot){
-	    switch(botDifficulty){
-		case Bot.EASY:
+	    switch(difficulty){
+		case StateManager.EASY:
 		    bot = new SlowBot(snake_P2);
 		    break;
-		case Bot.MEDIUM:
+		case StateManager.MEDIUM:
 		    bot = new PreciseBot(snake_P2);
 		    break;
-		case Bot.HARD:
+		case StateManager.HARD:
 		    bot = new FastBot(snake_P2);
 		    break;
 	    }
@@ -95,18 +97,7 @@ public class Multiplayer extends State{
 		blacklist.addAll(snake_P2.getSnakePoints());
                 
 		if(isBot) bot.control(blacklist);
-		
-//		if(snake_P1.isCollision(blacklist)){
-//		    if(score_P1 - 5 <= 0) isOver = true;
-//		    else score_P1-=5;
-//		}
-//		
-//		if(snake_P2.isCollision(blacklist)){
-//		    if(score_P2 - 5 <= 0) isOver = true;
-//		    else score_P2-=5;
-//		}
-		
-//		if(!isOver){
+
 		if(!snake_P1.isCollision(blacklist) && !snake_P2.isCollision(blacklist)){
                     snake_P1.move();
 		    snake_P2.move();
@@ -114,10 +105,10 @@ public class Multiplayer extends State{
 		    boolean isP1 = false;
 		    if((isP1 = snake_P1.getHead().equals(cherry.getLocation())) || snake_P2.getHead().equals(cherry.getLocation())){
 			if(isP1){
-			    score_P1+=10;
+			    score_P1 += baseScore*difficulty;
 			    this.applyEffect(snake_P1);
 			}else{
-			    score_P2+=10;
+			    score_P2 += baseScore*difficulty;
 			    this.applyEffect(snake_P2);
 			}
                         cherry = new Cherry(blacklist);
@@ -128,9 +119,9 @@ public class Multiplayer extends State{
             }
 
             if(stateTick%wallRefreshTick == 0)
-                walls = new Walls(wallAmount, cherry.getLocation());
+                walls = new Walls(baseWallAmount, cherry.getLocation());
 	    
-	    if(stateTick%(1000/Engine.FPS) == 0)
+	    if(stateTick%(1000/Engine.TICK_RATE) == 0)
 		time++;
         }
     }
@@ -227,10 +218,8 @@ public class Multiplayer extends State{
     @Override
     public void setPaused(boolean isPaused){this.isPaused = isPaused;}
 
-    public void vsBot(int dificulty){
-	isBot = true;
-	botDifficulty = dificulty;
-    }
+    public void setDifficulty(int difficulty){this.difficulty = difficulty;}
+    public void vsBot(){isBot = true;}
     
     public int getScore_P1(){return score_P1;}
     public int getScore_P2(){return score_P2;}

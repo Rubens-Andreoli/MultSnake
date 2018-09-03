@@ -29,9 +29,9 @@ public class Idle extends State{
     private Walls walls;
     
     //configs
+    private float updateTick = 3F;
+    private float wallRefreshTick = 600F;
     private int wallAmount = 50;
-    private int updateTick = 3;
-    private int wallRefreshTick = 600;
     
     //status
     private Point lastClick;
