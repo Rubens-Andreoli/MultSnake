@@ -1,34 +1,62 @@
 package com.iinmorus.engine;
 
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import javax.swing.Timer;
 
-public class Engine implements ActionListener{
+public class Engine extends Container implements Runnable, ActionListener{
     
     //engine configs
-    private int fps;
-    private int ups;
-    private int tickRate;
-
-    //engine status
-    private long runTick;
-    private boolean running;
+    public final Settings settings;
     
     //engine parts
-    private Timer timer;
-    private Game game;
+    private final Timer timer;
+    public final Renderer renderer;
+    public final SoundManager sounds;
+    public final StateManager states;
+    public final InputListener inputs;
 
-    public Engine(Game game, int fps, int ups){
-	this.fps = fps;
-	this.ups = ups;
-	tickRate = 1000/ups;
-        this.game = game;
-	timer = new Timer(1000/fps, this);
+    //engine status
+    private long renderTick;
+    private long updateTick;
+    private boolean running;
+
+    public Engine(Settings settings){
+	this.settings = settings;
+	
+	//parts
+	timer = new Timer(settings.renderRate, this);
+	renderer = new Renderer(this);
+	renderer.setAntialiasing(settings.antialiasing);
+	sounds = new SoundManager(settings.loadVolume);
+	sounds.setMute(settings.mute);
+	states = new StateManager(settings.loadBehaviour);
+	inputs = new InputListener(states);
+	if(settings.mouse) addMouseListener(inputs);
+	if(settings.keyboard) addKeyListener(inputs);
+	
+	//container
+	setPreferredSize(new Dimension(settings.width, settings.height));
+	setLayout(new BorderLayout());
+        add(renderer, BorderLayout.CENTER);
+        setFocusable(true);
+        requestFocus();
+    }
+    
+    public void registerStates(ArrayList<State> gameStates, String firstStateID){
+	for(State state : gameStates){
+	    states.registerState(state);
+	}
+	states.startState(firstStateID);
     }
  
-    public void start(){
+    @Override
+    public void run(){
 	timer.start();
 	running = true;
     }
@@ -40,22 +68,22 @@ public class Engine implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e){
-        game.renderer.repaint();
-	game.states.update();
+        renderer.repaint();
 
-	runTick++;
+	if(renderTick%(settings.fps/settings.ups) == 0){
+	    states.update();
+	    updateTick++;
+	}
+	
+	renderTick++;
     }
     
-    public void draw(Graphics2D g){
-	game.states.draw(g);
+    protected void draw(Graphics2D g){
+	states.draw(g);
     }
 
-    public boolean isRunning() {
-	return running;
-    }
-
-    public int getFps(){return fps;}
-    public int getUps(){return ups;}
-    public int getTickRate(){return tickRate;} 
-
+    public boolean isRunning(){return running;}    
+    public long getRenderTick(){return renderTick;}
+    public long getUpdateTick(){return updateTick;}   
+    
 }

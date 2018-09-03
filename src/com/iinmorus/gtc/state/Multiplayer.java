@@ -4,9 +4,6 @@ import com.iinmorus.gtc.bot.Bot;
 import com.iinmorus.gtc.bot.FastBot;
 import com.iinmorus.gtc.bot.PreciseBot;
 import com.iinmorus.gtc.bot.SlowBot;
-import com.iinmorus.engine.Engine;
-import com.iinmorus.engine.Renderer;
-import com.iinmorus.engine.SoundManager;
 import com.iinmorus.gtc.entity.Cherry;
 import com.iinmorus.gtc.entity.Drawable;
 import com.iinmorus.gtc.entity.Snake;
@@ -72,44 +69,40 @@ public class Multiplayer extends GameState{
     public void update(){
 	if(!isOver && !isPaused){
 	    stateTick++;
-            
-	    if(stateTick%updateTick == 0){
-		walls.update(cherry.getLocation());
-		
-		ArrayList<Point> blacklist = new ArrayList<>();
-		if(walls.isCollidable()) blacklist.addAll(walls.getWalls());
-		blacklist.addAll(snake_P1.getSnakePoints());
-		blacklist.addAll(snake_P2.getSnakePoints());
-                
-		if(isBot) bot.control(blacklist);
 
-		if(!snake_P1.isCollision(blacklist) && !snake_P2.isCollision(blacklist)){
-                    snake_P1.move();
-		    snake_P2.move();
+	    walls.update(cherry.getLocation());
+		
+	    ArrayList<Point> blacklist = new ArrayList<>();
+	    if(walls.isCollidable()) blacklist.addAll(walls.getWalls());
+	    blacklist.addAll(snake_P1.getSnakePoints());
+	    blacklist.addAll(snake_P2.getSnakePoints());
+               
+	    if(isBot) bot.control(blacklist);
+
+	    if(!snake_P1.isCollision(blacklist) && !snake_P2.isCollision(blacklist)){
+                snake_P1.move();
+	        snake_P2.move();
                     
-		    boolean isP1 = false;
-		    if((isP1 = snake_P1.getHead().equals(cherry.getLocation())) || snake_P2.getHead().equals(cherry.getLocation())){
-			GAME.sounds.play("cherry");
-			if(isP1){
-			    score_P1 += baseScore*difficulty;
-			    this.applyEffect(snake_P1);
-			}else{
-			    score_P2 += baseScore*difficulty;
-			    this.applyEffect(snake_P2);
-			}
-                        cherry = new Cherry(blacklist);
-			if(isBot) bot.changeGoal(cherry.getLocation());
-                    }
-		    
-                }else{
-		    GAME.sounds.stop("match");
-		    GAME.sounds.play("hit");
-		    isOver = true;
-		}
-            }
+	        boolean isP1 = false;
+	        if((isP1 = snake_P1.getHead().equals(cherry.getLocation())) || snake_P2.getHead().equals(cherry.getLocation())){
+		    GAME.sounds.play("cherry");
+		    if(isP1){
+		        score_P1 += baseScore*difficulty;
+		        applyEffect(snake_P1);
+		    }else{
+		        score_P2 += baseScore*difficulty;
+		        applyEffect(snake_P2);
+		    }
+		    cherry = new Cherry(blacklist);
+		    if(isBot) bot.changeGoal(cherry.getLocation());
+                }    
+            }else{
+		GAME.sounds.stop("match");
+		GAME.sounds.play("hit");
+		isOver = true;
+	    }
 	    
-	    if(stateTick%(1000/GAME.engine.getTickRate()) == 0)
-		time++;
+	    if(stateTick%(1000/GAME.settings.updateRate) == 0) time++;
         }
     }
 
@@ -158,11 +151,11 @@ public class Multiplayer extends GameState{
 		snake_P1.changeDirection(Snake.RIGHT);
 		break;
 	    case KeyEvent.VK_SPACE:
-		if(!isOver) this.setPaused(!isPaused);
+		if(!isOver) setPaused(!isPaused);
 		break;
 	    case KeyEvent.VK_ESCAPE:
-		this.start();
-		this.setPaused(false);
+		start();
+		setPaused(false);
 		break;
 	}
 	

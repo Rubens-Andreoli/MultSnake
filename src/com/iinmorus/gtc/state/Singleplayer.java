@@ -1,8 +1,5 @@
 package com.iinmorus.gtc.state;
 
-import com.iinmorus.engine.Engine;
-import com.iinmorus.engine.Renderer;
-import com.iinmorus.engine.SoundManager;
 import com.iinmorus.gtc.entity.Cherry;
 import com.iinmorus.gtc.entity.Snake;
 import com.iinmorus.gtc.entity.Walls;
@@ -43,32 +40,29 @@ public class Singleplayer extends GameState{
     public void update() {
 	if(!isOver && !isPaused){
 	    stateTick++;
-            
-	    if(stateTick%updateTick == 0){
-		walls.update(cherry.getLocation());
+	    
+	    walls.update(cherry.getLocation());
 		
-		ArrayList<Point> blacklist = new ArrayList<>();
-		blacklist.addAll(walls.getWalls());
-		blacklist.addAll(snake.getSnakePoints());
+	    ArrayList<Point> blacklist = new ArrayList<>();
+	    blacklist.addAll(walls.getWalls());
+	    blacklist.addAll(snake.getSnakePoints());
                 
-		if(!snake.isCollision(walls.isCollidable()? blacklist: snake.getSnakePoints())){
-                    snake.move();
-                    if(snake.getHead().equals(cherry.getLocation())){
-                        GAME.sounds.play("cherry");
-			score += baseScore*difficulty;
-			snake.grow();
-                        cherry = new Cherry(blacklist);
-                    }
-                }else{
-		    GAME.sounds.stop("match");
-		    GAME.sounds.play("hit");
-		    isOver = true;
-		}
-            }
+	    if(!snake.isCollision(walls.isCollidable()? blacklist: snake.getSnakePoints())){
+	        snake.move();
+                if(snake.getHead().equals(cherry.getLocation())){
+                    GAME.sounds.play("cherry");
+		    score += baseScore*difficulty;
+		    snake.grow();
+                    cherry = new Cherry(blacklist);
+                }
+            }else{
+	        GAME.sounds.stop("match");
+	        GAME.sounds.play("hit");
+	        isOver = true;
+	    }
 	    	    
-	    if(stateTick%(1000/GAME.engine.getTickRate()) == 0)
-		time++;
-        }
+	    if(stateTick%(1000/GAME.settings.updateRate) == 0) time++;
+	}
     }
 
     @Override
@@ -114,8 +108,7 @@ public class Singleplayer extends GameState{
 		snake.changeDirection(Snake.RIGHT);
 		break;
 	    case KeyEvent.VK_SPACE:
-		if(!isOver)
-		    isPaused = !isPaused;
+		if(!isOver) setPaused(!isPaused);
 		break;
 	    case KeyEvent.VK_ESCAPE:
 		this.start();
@@ -131,7 +124,13 @@ public class Singleplayer extends GameState{
     public void mousePressed(MouseEvent e){}
 
     @Override
-    public void setPaused(boolean isPaused){this.isPaused = isPaused;}
+    public void setPaused(boolean isPaused){
+	this.isPaused = isPaused;
+	if(isPaused) GAME.sounds.stop("match");
+	else{
+	    GAME.sounds.loop("match", GAME.sounds.getPosition("match"), 600, GAME.sounds.getFrames("match") - 2000);
+	}
+    }
     
     @Override
     public void setDifficulty(int difficulty){this.difficulty = difficulty;}

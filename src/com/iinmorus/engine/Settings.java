@@ -6,13 +6,15 @@ import java.awt.Toolkit;
 public class Settings {
     public final int fps;
     public final int ups;
+    public final int renderRate;
+    public final int updateRate;
 	
     public final int height;
     public final int width;
     public final boolean fullscreen;
     public final boolean antialiasing;
 	
-    public final float masterVolume;
+    public final float loadVolume;
     public final boolean mute;
     
     public final boolean mouse;
@@ -22,7 +24,9 @@ public class Settings {
     
     private Settings(Builder builder){
 	this.fps = builder.fps;
-	this.ups = builder.fps;
+	this.ups = builder.ups;
+	this.renderRate = 1000/builder.fps;
+	this.updateRate = 1000/builder.ups;
 	this.fullscreen = builder.fullscreen;
 	if(!builder.fullscreen){
 	    this.height = builder.height;
@@ -33,7 +37,7 @@ public class Settings {
 	    height = (int) screenSize.getHeight();
 	}
 	this.antialiasing = builder.antialiasing;
-	this.masterVolume = builder.masterVolume;
+	this.loadVolume = builder.loadVolume;
 	this.mute = builder.mute;
 	this.mouse = builder.mouse;
 	this.keyboard = builder.keyboard;
@@ -42,14 +46,14 @@ public class Settings {
  
     public static class Builder{
 	private int fps = 60;
-	private int ups = 30;
+	private int ups = 20;
 	
 	private int height = 600;
 	private int width = 700;
 	private boolean fullscreen = false;
 	private boolean antialiasing = true;
 	
-	private float masterVolume = 0.7F;
+	private float loadVolume = 0.7F;
 	private boolean mute = false;
 	
 	private boolean mouse = true;
@@ -58,12 +62,12 @@ public class Settings {
 	private int loadBehaviour = StateManager.REGISTER_LOAD;
 	
 	public Builder setFPS(int fps){
-	    this.fps = fps;
+	    if(fps > ups) this.fps = fps;
 	    return this;
 	}
 	
 	public Builder setUPS(int ups){
-	    this.ups = ups;
+	    if(ups < fps) this.ups = ups;
 	    return this;
 	}
 	
@@ -87,8 +91,8 @@ public class Settings {
 	    return this;
 	}
 	
-	public Builder setMasterVolume(float volume){
-	    masterVolume = volume;
+	public Builder setLoadVolume(float volume){
+	    loadVolume = volume;
 	    return this;
 	}
 	

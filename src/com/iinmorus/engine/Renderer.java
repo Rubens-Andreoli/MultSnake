@@ -7,22 +7,18 @@ import javax.swing.JPanel;
 
 public class Renderer extends JPanel{
     
+    private final Engine engine;
+    
     private boolean antialiasing;
-    
-    private Engine engine;
   
-    protected Renderer(boolean antialiasing){
-	this.antialiasing = antialiasing;
-    }
-    
-    protected void setEngine(Engine engine){
+    protected Renderer(Engine engine){
 	this.engine = engine;
     }
 
     @Override
     protected void paintComponent(Graphics g){
 	super.paintComponent(g);
-
+	
 	Graphics2D g2d =(Graphics2D)g;
 	if(antialiasing)
 	    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);

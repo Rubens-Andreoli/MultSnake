@@ -19,7 +19,6 @@ public class StateManager{
     public void registerState(State state){
 	String stateID = state.getStateID();
 	states.put(stateID, state);
-	System.out.println(states);
 	if(loadBehaviour == 1) loadState(stateID);
     }
     
@@ -29,7 +28,6 @@ public class StateManager{
     }
     
     public void startState(String stateID){
-		System.out.println(states);
 	if(!states.containsKey(stateID)) return;
 	if(currentState != null) states.get(currentState).setPaused(true);
 	if(loadBehaviour == 2) loadState(stateID);

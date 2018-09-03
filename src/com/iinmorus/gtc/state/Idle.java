@@ -2,7 +2,6 @@ package com.iinmorus.gtc.state;
 
 import com.iinmorus.gtc.bot.Bot;
 import com.iinmorus.gtc.bot.FastBot;
-import com.iinmorus.engine.Renderer;
 import com.iinmorus.gtc.entity.Cherry;
 import com.iinmorus.gtc.entity.Drawable;
 import com.iinmorus.gtc.entity.Snake;
@@ -41,22 +40,19 @@ public class Idle extends GameState{
     @Override
     public void update() {
 	stateTick++;
-	
-	if(stateTick%updateTick == 0){
-	    walls.update(cherry.getLocation());
+
+	walls.update(cherry.getLocation());
 	    
-	    if(lastClick!=null && snake.getHead().equals(lastClick)) 
-		bot.changeGoal(cherry.getLocation());
+	if(lastClick!=null && snake.getHead().equals(lastClick)) 
+	    bot.changeGoal(cherry.getLocation());
 	   
-	    bot.control(walls.isCollidable()? walls.getWalls() : snake.getSnakePoints());
-	    snake.move();
+	bot.control(walls.isCollidable()? walls.getWalls() : snake.getSnakePoints());
+	snake.move();
 	    
-	    if(snake.getHead().equals(cherry.getLocation())){
-		cherry = new Cherry(walls.getWalls());
-		bot.changeGoal(cherry.getLocation());
-	    } 
-	}
-	    
+	if(snake.getHead().equals(cherry.getLocation())){
+	    cherry = new Cherry(walls.getWalls());
+	    bot.changeGoal(cherry.getLocation());
+	}     
     }
 
     @Override

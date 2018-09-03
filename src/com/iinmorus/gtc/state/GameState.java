@@ -24,7 +24,6 @@ public abstract class GameState implements State, Serializable{
     protected Font titleFont;
     
     //configs
-    protected int updateTick = 3;
     protected int baseWallAmount = 30;
     protected int baseScore = 5;
     protected int difficulty = EASY;

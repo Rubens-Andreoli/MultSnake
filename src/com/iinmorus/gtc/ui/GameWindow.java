@@ -1,9 +1,8 @@
 package com.iinmorus.gtc.ui;
 
-import com.iinmorus.engine.Game;
+import com.iinmorus.engine.Engine;
 import com.iinmorus.engine.Settings;
 import com.iinmorus.engine.State;
-import com.iinmorus.gtc.state.GameState;
 import com.iinmorus.gtc.state.Idle;
 import com.iinmorus.gtc.state.Multiplayer;
 import com.iinmorus.gtc.state.Singleplayer;
@@ -17,14 +16,15 @@ import javax.swing.JMenuItem;
 
 public class GameWindow extends JFrame{
     
-    public static final Game GAME;
+    public static final Engine GAME;
     static{
 	Settings s = new Settings.Builder().create();
 	ArrayList<State> states = new ArrayList<>();
 	states.add(new Idle());
 	states.add(new Singleplayer());
 	states.add(new Multiplayer());
-	GAME = new Game(s, states);
+	GAME = new Engine(s);
+	GAME.registerStates(states, "idle");
     }
 
     private Thread gameThread;
