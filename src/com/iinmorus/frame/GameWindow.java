@@ -5,6 +5,8 @@ import com.iinmorus.engine.Game;
 import com.iinmorus.engine.Settings;
 import com.iinmorus.engine.State;
 import com.iinmorus.gtc.GTC;
+import com.iinmorus.gtc.state.GTCState;
+import com.iinmorus.gtc.state.Singleplayer;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JFrame;
@@ -66,14 +68,14 @@ public class GameWindow extends JFrame{
 //	GAME.states.loadState(/*loaded state from file*/);				    //Carrega partida salva
         
 	/////COMEÇA UMA PARTIDA EASY SINGLEPLAYER QUE COMEÇA PAUSADA:
-//	State s = GAME.states.getState(GameState.SINGLE);
-//	s.setDifficulty(GameState.EASY);
-//	GAME.states.startState(GameState.SINGLE);
+//	State s = engine.states.getState(GTC.SINGLE);
+//	s.setDifficulty(GTCState.EASY);
+//	engine.states.startState(GTC.SINGLE);
 //	s.setPaused(true);
 
 	/////COMEÇA UMA PARTIDA MEDIUM SINGLEPLAYER
-//	GAME.states.getState(GameState.SINGLE).setDifficulty(GameState.MEDIUM);
-//	GAME.states.startState(GameState.SINGLE);
+//	engine.states.getState(GTC.SINGLE).setDifficulty(GTCState.MEDIUM);
+//	engine.states.startState(GTC.SINGLE);
 
 	/////COMEÇA UMA PARTIDA HARD MULTIPLAYER VS BOT
 //	Multiplayer m = GAME.states.getState(GameState.MULT, Multiplayer.class);

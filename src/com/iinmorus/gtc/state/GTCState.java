@@ -2,13 +2,14 @@ package com.iinmorus.gtc.state;
 
 import com.iinmorus.engine.Engine;
 import com.iinmorus.engine.State;
+import static com.iinmorus.gtc.GTC.EASY;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 
 public abstract class GTCState extends State{
-    public static final int EASY=1, MEDIUM=2, HARD=3;
-  
+
     //ui
     protected Color background = Color.BLACK;
     protected Color overColor = Color.RED;
@@ -27,7 +28,6 @@ public abstract class GTCState extends State{
     protected final int width;
     protected final int height;
     protected final int scale;
-    protected int baseWallAmount = 30;
     protected int baseScore = 5;
     protected int difficulty = EASY;
     
@@ -44,7 +44,7 @@ public abstract class GTCState extends State{
     }
 
     @Override
-    public void loadResources() {
+    protected void loadResources() {
 	//Font
 	try {
 	    GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -69,6 +69,16 @@ public abstract class GTCState extends State{
 	engine.sounds.load("/sounds/cherry.mp3", "cherry");
     }
     
+    protected void drawPaused(Graphics2D g){
+	g.setFont(warningFont);
+	g.setColor(pauseColor);
+	g.drawString(pauseMsg, width/2-g.getFontMetrics(warningFont).stringWidth(pauseMsg)/2, height/2);
+    }
     
+    protected void drawOver(Graphics2D g){
+	g.setFont(warningFont);
+	g.setColor(overColor);
+        g.drawString(overMsg, width/2-g.getFontMetrics(warningFont).stringWidth(overMsg)/2, height/2);
+    }
 
 }

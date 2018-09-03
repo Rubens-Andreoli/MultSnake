@@ -37,7 +37,7 @@ public class Singleplayer extends GTCState{
 	
         snake = new Snake(0,0);
         cherry = new Cherry();
-        walls = new Walls(Math.round(baseWallAmount*difficulty*0.60F));
+        walls = new Walls(difficulty);
 	
 	engine.sounds.loop("match", 600, engine.sounds.getFrames("match") - 2000);
     }
@@ -63,6 +63,7 @@ public class Singleplayer extends GTCState{
                     cherry = new Cherry(blacklist);
                 }
             }else{
+		score -= baseScore*difficulty+((time+1)*0.2F)+1;
 	        engine.sounds.stop("match");
 	        engine.sounds.play("hit");
 	        isOver = true;
@@ -76,21 +77,22 @@ public class Singleplayer extends GTCState{
 	cherry.draw(g);
 	walls.draw(g);
 	
+	drawScore(g);
+	
+        if(isOver){
+            super.drawOver(g);
+        }else if(isPaused){
+	    super.drawPaused(g);
+	}
+    }
+    
+    private void drawScore(Graphics2D g){
 	g.setFont(scoreFont);
 	g.setColor(snake.getColor());
 	g.drawString("Score: " + score, 10, 20);
 	g.drawString("Length: " + snake.getTailLenght(), 10, 40);
 	g.setColor(overColor);
 	g.drawString("Time: " + time, 10, height-10); 
-	
-	g.setFont(warningFont);
-        if(isOver){
-            g.setColor(overColor);
-	    g.drawString(overMsg, width/2-g.getFontMetrics(warningFont).stringWidth(overMsg)/2, height/2);
-        }else if(isPaused){
-	    g.setColor(pauseColor);
-	    g.drawString(pauseMsg, width/2-g.getFontMetrics(warningFont).stringWidth(pauseMsg)/2, height/2);
-	}
     }
 
     @Override
@@ -131,7 +133,9 @@ public class Singleplayer extends GTCState{
 	}
     }
     
+    @Override
     public void setDifficulty(int difficulty){this.difficulty = difficulty;}
+    
     public int getScore(){return score;}
     public int getTime(){return time;}
 

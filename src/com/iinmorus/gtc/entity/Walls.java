@@ -14,11 +14,16 @@ public class Walls extends Drawable{
     private long start;
     private final int respawnTime = 20000;
     private final int ghostTime = 2000;
+    private final int baseWallAmount = 30;
 
-    public Walls(final int amount) {
+    public Walls(){
+	this(4);
+    }
+    
+    public Walls(int difficulty) {
 	color = Color.WHITE;
 	walls = new ArrayList<>();
-	this.amount = amount;
+	amount = Math.round(baseWallAmount*difficulty*0.60F);
     }
        
     private void generate(Point pointsBlacklist){

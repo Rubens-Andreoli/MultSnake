@@ -1,6 +1,7 @@
 package com.iinmorus.engine;
 
 import java.awt.Graphics2D;
+import java.util.List;
 
 public class Engine{
     
@@ -33,18 +34,20 @@ public class Engine{
 	states = new StateManager(settings.loadStrategy);
 	renderer = new Renderer(this);
 	input = new Input(states);
-
-	//configure parts
-	thread.setName(game.getName());
-	if(settings.listenMouse) renderer.addMouseListener(input);
-	if(settings.listenKey) renderer.addKeyListener(input);
     }
     
     public void start(){
-	for(State state : game.generateStateList(this))
+	List<State> stateTemp = game.generateStateList(this);
+	if(stateTemp == null) return;
+	
+	for(State state : stateTemp)
 	    states.registerState(state);
 	states.startState(game.firstStateID());
-        renderer.requestFocus();
+
+	thread.setName(game.getName());
+	if(settings.listenMouse) renderer.addMouseListener(input);
+	if(settings.listenKey) renderer.addKeyListener(input);
+	renderer.requestFocus();
 	thread.start();
     }
     

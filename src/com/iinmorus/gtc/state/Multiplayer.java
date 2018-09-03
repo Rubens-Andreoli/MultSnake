@@ -1,13 +1,11 @@
 package com.iinmorus.gtc.state;
 
 import com.iinmorus.engine.Engine;
+import com.iinmorus.gtc.GTC;
 import static com.iinmorus.gtc.GTC.IDLE;
 import static com.iinmorus.gtc.GTC.MULT;
 import static com.iinmorus.gtc.GTC.SINGLE;
-import com.iinmorus.gtc.bot.Bot;
-import com.iinmorus.gtc.bot.FastBot;
-import com.iinmorus.gtc.bot.PreciseBot;
-import com.iinmorus.gtc.bot.SlowBot;
+import com.iinmorus.gtc.entity.Bot;
 import com.iinmorus.gtc.entity.Cherry;
 import com.iinmorus.gtc.entity.Snake;
 import com.iinmorus.gtc.entity.Walls;
@@ -51,20 +49,10 @@ public class Multiplayer extends GTCState{
 	snake_P2 = new Snake(width/scale-1, 0);
 	snake_P2.setColor(new Color(112, 219, 112));
         cherry = new Cherry();
-        walls = new Walls(Math.round(baseWallAmount*difficulty*0.60F));
+        walls = new Walls(difficulty);
 	
 	if(isBot){
-	    switch(difficulty){
-		case EASY:
-		    bot = new SlowBot(snake_P2);
-		    break;
-		case MEDIUM:
-		    bot = new PreciseBot(snake_P2);
-		    break;
-		case HARD:
-		    bot = new FastBot(snake_P2);
-		    break;
-	    }
+	    bot = new Bot(snake_P2, difficulty);
 	    bot.changeGoal(cherry.getLocation());
 	}
 	
@@ -102,14 +90,14 @@ public class Multiplayer extends GTCState{
 		        applyEffect(snake_P2);
 		    }
 		    cherry = new Cherry(blacklist);
-		    if(isBot) bot.changeGoal(cherry.getLocation());
+		    if(isBot)bot.changeGoal(cherry.getLocation());
                 }    
             }else{
 		engine.sounds.stop("match");
 		engine.sounds.play("hit");
 		
-		if(isHitP1) score_P1 -= baseScore*difficulty+((time+1)*0.2F);
-		else score_P2 -= baseScore*difficulty+((time+1)*0.2F);
+		if(isHitP1) score_P1 -= baseScore*difficulty+((time+1)*0.2F)+1;
+		else score_P2 -= baseScore*difficulty+((time+1)*0.2F)+1;
 		
 		if(score_P1 == score_P2) winner = "It's a Draw";
 		else if(score_P1 > score_P2) winner = "Player 1";
@@ -127,6 +115,24 @@ public class Multiplayer extends GTCState{
 	cherry.draw(g);
 	walls.draw(g);
 	
+	drawScore(g);
+        
+        if(isOver){
+            drawOver(g);
+        }else if(isPaused){
+	    super.drawPaused(g);
+	}
+    }
+    
+    @Override
+    protected void drawOver(Graphics2D g){
+	super.drawOver(g);
+	g.setFont(msgFont);
+	g.drawString(msg, width/2-g.getFontMetrics(msgFont).stringWidth(msg)/2, height/2+40);
+	g.drawString(winner, width/2-g.getFontMetrics(msgFont).stringWidth(winner)/2, height/2+80);
+    }
+    
+    private void drawScore(Graphics2D g){
 	g.setFont(scoreFont);
 	g.setColor(snake_P1.getColor());
         g.drawString("Score: " + score_P1, 10, 20);
@@ -134,18 +140,6 @@ public class Multiplayer extends GTCState{
 	g.drawString("Score: " + score_P2, 10, 40);
 	g.setColor(overColor);
 	g.drawString("Time: " + time, 10, height-10);
-        
-	g.setFont(warningFont);
-        if(isOver){
-            g.setColor(overColor);
-            g.drawString(overMsg, width/2-g.getFontMetrics(warningFont).stringWidth(overMsg)/2, height/2);
-	    g.setFont(msgFont);
-	    g.drawString(msg, width/2-g.getFontMetrics(msgFont).stringWidth(msg)/2, height/2+40);
-	    g.drawString(winner, width/2-g.getFontMetrics(msgFont).stringWidth(winner)/2, height/2+80);
-        }else if(isPaused){
-	    g.setColor(pauseColor);
-	    g.drawString(pauseMsg, width/2-g.getFontMetrics(warningFont).stringWidth(pauseMsg)/2, height/2);
-	}
     }
 
     @Override
@@ -226,7 +220,9 @@ public class Multiplayer extends GTCState{
 	    );
     }
 
+    @Override
     public void setDifficulty(int difficulty){this.difficulty = difficulty;}
+    
     public void vsBot(boolean isBot){this.isBot = isBot;}
     public int getScore_P1(){return score_P1;}
     public int getScore_P2(){return score_P2;}

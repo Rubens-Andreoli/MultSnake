@@ -4,8 +4,7 @@ import com.iinmorus.engine.Engine;
 import static com.iinmorus.gtc.GTC.IDLE;
 import static com.iinmorus.gtc.GTC.MULT;
 import static com.iinmorus.gtc.GTC.SINGLE;
-import com.iinmorus.gtc.bot.Bot;
-import com.iinmorus.gtc.bot.FastBot;
+import com.iinmorus.gtc.entity.Bot;
 import com.iinmorus.gtc.entity.Cherry;
 import com.iinmorus.gtc.entity.Snake;
 import com.iinmorus.gtc.entity.Walls;
@@ -14,6 +13,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 public class Idle extends GTCState{
     
@@ -35,11 +35,9 @@ public class Idle extends GTCState{
 	snake = new Snake(0,0);
 	snake.setColor(new Color(255, 173, 51));
 	cherry = new Cherry();
-	bot = new FastBot(snake);
+	bot = new Bot(snake);
 	bot.changeGoal(cherry.getLocation());
-	baseWallAmount = 50;
-	walls = new Walls(baseWallAmount);
-
+	walls = new Walls();
 	engine.sounds.loop("idle", 600, engine.sounds.getFrames("idle") - 2000);
     }
 
@@ -47,10 +45,14 @@ public class Idle extends GTCState{
     public void update() {
         walls.update(cherry.getLocation());
 	    
+	ArrayList<Point> blacklist = new ArrayList<>();
+	blacklist.addAll(snake.getSnakePoints());
+	if(walls.isCollidable()) blacklist.addAll(walls.getWalls());
+	
 	if(lastClick!=null && snake.getHead().equals(lastClick)) 
 	    bot.changeGoal(cherry.getLocation());
 	   
-	bot.control(walls.isCollidable()? walls.getWalls() : snake.getSnakePoints());
+	bot.control(blacklist);
 	snake.move();
 	    
 	if(snake.getHead().equals(cherry.getLocation())){
@@ -62,11 +64,12 @@ public class Idle extends GTCState{
     @Override
     public void draw(Graphics2D g) {
 	snake.draw(g);
-	
 	cherry.draw(g);
-	
 	walls.draw(g);
-	
+	drawTitle(g);
+    }
+    
+    private void drawTitle(Graphics2D g){
 	g.setColor(titleColor);
 	g.fillRect(0, 0, width, 52);
 	g.setColor(background);
@@ -107,5 +110,8 @@ public class Idle extends GTCState{
 		engine.sounds.getFrames("idle") - 2000
 	    );
     }
+
+    @Override
+    public void setDifficulty(int difficulty){}
 
 }

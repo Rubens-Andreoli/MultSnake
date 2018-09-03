@@ -16,10 +16,11 @@ public abstract class State implements Serializable{
     public abstract String getStateID();
     
     protected abstract void loadResources();
-    protected abstract void start();
+    public abstract void start();
     protected abstract void update();
     protected abstract void draw(Graphics2D g);
-    protected abstract void setPaused(boolean isPaused);
+    public abstract void setPaused(boolean isPaused);
+    public abstract void setDifficulty(int difficulty);
     
     protected abstract void keyPressed(KeyEvent e);
     protected abstract void keyReleased(KeyEvent e);

@@ -13,6 +13,8 @@ import java.util.List;
 public class GTC implements Game{
 
     public static final String IDLE="idle", SINGLE="single", MULT="mult";
+    public static final int EASY=1, MEDIUM=2, HARD=3;
+    
     public static final Settings SETTINGS;
     static{
 	SETTINGS = new Settings.Builder().create();
