@@ -5,10 +5,10 @@ import java.awt.Toolkit;
 
 public class Settings {
     public final int fps;
-    public final int ups;
-    public final int renderRate;
+    public final int tickRate;
+    public final int updateTick;
     public final int updateRate;
-	
+
     public final int height;
     public final int width;
     public final boolean fullscreen;
@@ -24,9 +24,10 @@ public class Settings {
     
     private Settings(Builder builder){
 	this.fps = builder.fps;
-	this.ups = builder.ups;
-	this.renderRate = (1000/builder.fps)-(int)(builder.fps*0.2); //Attempt to correct Swing Timer failed delay!
-	this.updateRate = (1000/builder.ups)-(int)(builder.ups*0.2);
+	this.tickRate = (1000/builder.fps);
+	this.updateTick = builder.updateTick;
+	this.updateRate = this.tickRate*builder.updateTick;
+
 	this.fullscreen = builder.fullscreen;
 	if(!builder.fullscreen){
 	    this.height = builder.height;
@@ -37,16 +38,19 @@ public class Settings {
 	    height = (int) screenSize.getHeight();
 	}
 	this.antialiasing = builder.antialiasing;
+	
 	this.loadVolume = builder.loadVolume;
 	this.mute = builder.mute;
 	this.mouse = builder.mouse;
+	
 	this.keyboard = builder.keyboard;
+	
 	this.loadBehaviour = builder.loadBehaviour;
     }
  
     public static class Builder{
 	private int fps = 60;
-	private int ups = 15;
+	private int updateTick = 4;
 	
 	private int height = 600;
 	private int width = 700;
@@ -66,8 +70,8 @@ public class Settings {
 	    return this;
 	}
 	
-	public Builder setUPS(int ups){
-	    if(ups > 0 && ups < 60) this.ups = ups;
+	public Builder setUpdateTick(int updateTick){
+	    if(updateTick > 0) this.updateTick = updateTick;
 	    return this;
 	}
 	

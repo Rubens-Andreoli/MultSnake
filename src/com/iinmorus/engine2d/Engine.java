@@ -15,35 +15,36 @@ public class Engine extends Container implements Runnable, ActionListener{
     public final Settings settings;
     
     //engine parts
-    private final Timer renderTimer;
-    private final Timer updateTimer;
-    public final Renderer renderer;
+    private Timer timer;
+    public final RenderBuffer renderBuffer;
+    public final Input inputs;
     public final SoundManager sounds;
     public final StateManager states;
-    public final InputListener inputs;
 
     //engine status
+    private long tick;
     private boolean running;
 
     public Engine(Settings settings){
 	this.settings = settings;
 	
 	//parts
-	updateTimer = new Timer(settings.updateRate, this);
-	renderer = new Renderer(this);
-	renderer.setAntialiasing(settings.antialiasing);
-	renderTimer = new Timer(settings.renderRate, renderer);
+	renderBuffer = new RenderBuffer(this);
+	renderBuffer.setAntialiasing(settings.antialiasing);
+	timer = new Timer(settings.tickRate, this);
 	sounds = new SoundManager(settings.loadVolume);
 	sounds.setMute(settings.mute);
 	states = new StateManager(settings.loadBehaviour);
-	inputs = new InputListener(states);
+	inputs = new Input(states);
 	if(settings.mouse) addMouseListener(inputs);
 	if(settings.keyboard) addKeyListener(inputs);
 	
 	//container
-	setPreferredSize(new Dimension(settings.width, settings.height));
+	Dimension dim = new Dimension(settings.width, settings.height);
+	setPreferredSize(dim);
+	setMaximumSize(dim);
 	setLayout(new BorderLayout());
-        add(renderer, BorderLayout.CENTER);
+        add(renderBuffer, BorderLayout.CENTER);
         setFocusable(true);
         requestFocus();
     }
@@ -57,20 +58,24 @@ public class Engine extends Container implements Runnable, ActionListener{
  
     @Override
     public void run(){
-	renderTimer.start();
-	updateTimer.start();
+	if(running) return;
+	timer.start();
 	running = true;
     }
     
     public void stop(){
-	renderTimer.stop();
-	updateTimer.stop();
+	if(!running) return;
+	timer.stop();
 	running = false;
     }
 
     @Override
     public void actionPerformed(ActionEvent e){
-	states.update();
+	renderBuffer.repaint();
+	if(tick%settings.updateTick == 0){
+	    states.update();
+	}
+	tick++;
     }
     
     protected void render(Graphics2D g){
@@ -78,5 +83,6 @@ public class Engine extends Container implements Runnable, ActionListener{
     }
 
     public boolean isRunning(){return running;}    
+
     
 }

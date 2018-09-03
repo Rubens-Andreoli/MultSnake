@@ -5,11 +5,11 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class InputListener implements MouseListener, KeyListener{
+public class Input implements MouseListener, KeyListener{
 
     private final StateManager stateManager;
     
-    protected InputListener(StateManager manager){
+    protected Input(StateManager manager){
 	stateManager = manager;
     }
     
@@ -29,10 +29,15 @@ public class InputListener implements MouseListener, KeyListener{
     }
 
 
+    @Override
     public void mouseClicked(MouseEvent e){}
+    @Override
     public void mouseReleased(MouseEvent e){}
+    @Override
     public void mouseEntered(MouseEvent e){}
+    @Override
     public void mouseExited(MouseEvent e){}
+    @Override
     public void keyTyped(KeyEvent e){}
     
 }

@@ -40,6 +40,7 @@ public class Singleplayer extends GameState{
     public void update() {
 	if(!isOver && !isPaused){
 	    stateTick++;
+	    if(stateTick%(1000/GAME.settings.updateRate) == 0) time++;
 	    
 	    walls.update(cherry.getLocation());
 		
@@ -60,8 +61,6 @@ public class Singleplayer extends GameState{
 	        GAME.sounds.play("hit");
 	        isOver = true;
 	    }
-	    	    
-	    if(stateTick%GAME.settings.ups == 0) time++;
 	}
     }
 
@@ -132,7 +131,6 @@ public class Singleplayer extends GameState{
 	}
     }
     
-    @Override
     public void setDifficulty(int difficulty){this.difficulty = difficulty;}
     
     public int getScore(){return score;}
@@ -141,6 +139,11 @@ public class Singleplayer extends GameState{
     @Override
     public String getStateID() {
 	return SINGLE;
+    }
+
+    @Override
+    public void unload() {
+	
     }
 
 }

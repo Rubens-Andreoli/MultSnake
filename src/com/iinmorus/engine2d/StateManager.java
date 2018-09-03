@@ -29,7 +29,7 @@ public class StateManager{
     
     public void startState(String stateID){
 	if(!states.containsKey(stateID)) return;
-	if(currentState != null) states.get(currentState).setPaused(true);
+	if(currentState != null) states.get(currentState).unload();
 	if(loadBehaviour == 2) loadState(stateID);
 	states.get(stateID).start();
 	currentState = stateID;
@@ -37,7 +37,7 @@ public class StateManager{
 
     public void resumeState(String stateID){
 	if(!states.containsKey(stateID)) return;
-	if(currentState != null) states.get(currentState).setPaused(true);
+	if(currentState != null) states.get(currentState).unload();
 	currentState = stateID;
     }
     

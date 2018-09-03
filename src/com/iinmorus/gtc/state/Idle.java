@@ -90,9 +90,7 @@ public class Idle extends GameState{
     public void keyReleased(KeyEvent e){}
 
     @Override
-    public void setPaused(boolean isPaused){
-	GAME.sounds.stop("idle");
-    }
+    public void setPaused(boolean isPaused){}
 
     @Override
     public String getStateID() {
@@ -100,6 +98,12 @@ public class Idle extends GameState{
     }
 
     @Override
-    public void setDifficulty(int difficulty) {}
+    public void unload() {
+	snake = null;
+	cherry = null;
+	bot = null;
+	walls = null;
+	GAME.sounds.close("idle");
+    }
 
 }

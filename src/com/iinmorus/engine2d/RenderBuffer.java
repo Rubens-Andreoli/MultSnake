@@ -3,17 +3,15 @@ package com.iinmorus.engine2d;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 
-public class Renderer extends JPanel implements ActionListener{
+public class RenderBuffer extends JPanel{
     
     private final Engine engine;
     
     private boolean antialiasing;
   
-    protected Renderer(Engine engine){
+    protected RenderBuffer(Engine engine){
 	this.engine = engine;
     }
 
@@ -29,11 +27,5 @@ public class Renderer extends JPanel implements ActionListener{
 
     public void setAntialiasing(boolean antialiasing) {
 	this.antialiasing = antialiasing;
-    } 
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-	repaint();
-    }
-    
+    }   
 }

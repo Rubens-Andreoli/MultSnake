@@ -69,7 +69,8 @@ public class Multiplayer extends GameState{
     public void update(){
 	if(!isOver && !isPaused){
 	    stateTick++;
-
+	    if(stateTick%(1000/GAME.settings.updateRate) == 0) time++;
+	    
 	    walls.update(cherry.getLocation());
 		
 	    ArrayList<Point> blacklist = new ArrayList<>();
@@ -101,8 +102,6 @@ public class Multiplayer extends GameState{
 		GAME.sounds.play("hit");
 		isOver = true;
 	    }
-	    
-	    if(stateTick%GAME.settings.ups == 0) time++;
         }
     }
 
@@ -203,7 +202,6 @@ public class Multiplayer extends GameState{
 	}
     }
 
-    @Override
     public void setDifficulty(int difficulty){this.difficulty = difficulty;}
     
     public void vsBot(boolean isBot){this.isBot = isBot;}
@@ -215,6 +213,11 @@ public class Multiplayer extends GameState{
     @Override
     public String getStateID() {
 	return MULT;
+    }
+
+    @Override
+    public void unload() {
+	
     }
 
 }
