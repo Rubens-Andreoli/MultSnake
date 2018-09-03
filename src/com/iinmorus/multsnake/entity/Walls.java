@@ -10,7 +10,8 @@ import java.util.Random;
 public class Walls extends Drawable{
         
     private final ArrayList<Point> walls;
-    private boolean collidable = true;
+    private boolean collidable;
+    private int i;
 
     private ArrayList<Point> pointsBlackList;
     
@@ -43,7 +44,7 @@ public class Walls extends Drawable{
 
     @Override
     public void draw(Graphics g){
-	g.setColor(collidable ? baseColor : baseColor.brighter().brighter());
+	g.setColor(collidable ? baseColor : baseColor.darker());
 	walls.stream().forEach((wall) -> {
 		g.fillRect(wall.x*Renderer.SCALE, wall.y*Renderer.SCALE, Renderer.SCALE, Renderer.SCALE); 
 	});
@@ -56,5 +57,9 @@ public class Walls extends Drawable{
     public ArrayList<Point> getWalls(){
 	return walls;
     }
+
+    public boolean isCollidable() {
+	return collidable;
+    } 
 
 }

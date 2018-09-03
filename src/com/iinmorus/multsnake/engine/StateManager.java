@@ -1,5 +1,9 @@
-package com.iinmorus.multsnake.state;
+package com.iinmorus.multsnake.engine;
 
+import com.iinmorus.multsnake.state.Idle;
+import com.iinmorus.multsnake.state.Multiplayer;
+import com.iinmorus.multsnake.state.Singleplayer;
+import com.iinmorus.multsnake.state.State;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -80,5 +84,4 @@ public class StateManager implements MouseListener, KeyListener{
 
     @Override
     public void keyTyped(KeyEvent e){}
-    
 }

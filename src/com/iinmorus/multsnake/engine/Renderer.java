@@ -11,7 +11,6 @@ public class Renderer extends JPanel{
         
     private final Engine engine;
   
-    
     public Renderer(Engine engine){
 	this.engine = engine;
         this.configRenderer();

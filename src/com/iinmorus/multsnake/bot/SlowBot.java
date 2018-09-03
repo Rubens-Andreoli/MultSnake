@@ -20,15 +20,15 @@ public class SlowBot extends Bot {
 	switch(snake.getDirection()){
 	    case DOWN:	
 	    case UP:
-		if(goal.getLocation().y+blindness == snake.getHead().y){
-		    if(goal.getLocation().x < snake.getHead().x && !snake.isCollisionAhead(LEFT, 1, avoidPoints))
+		if(goal.y == snake.getHead().y){
+		    if(goal.x < snake.getHead().x && !snake.isCollisionAhead(LEFT, 1, avoidPoints))
 			snake.changeDirection(Snake.LEFT);
-		    else if(goal.getLocation().x+blindness > snake.getHead().x && !snake.isCollisionAhead(RIGHT, 1, avoidPoints))
+		    else if(goal.x > snake.getHead().x && !snake.isCollisionAhead(RIGHT, 1, avoidPoints))
 			snake.changeDirection(Snake.RIGHT);
 		}
 		
 		if(snake.isCollision(avoidPoints)){
-		    if(goal.getLocation().x > snake.getHead().x){
+		    if(goal.x > snake.getHead().x){
 			if (snake.isCollisionAhead(RIGHT, 1, avoidPoints)) {
 			    snake.changeDirection(Snake.LEFT);
 			} else {
@@ -45,15 +45,15 @@ public class SlowBot extends Bot {
 		break;
 	    case LEFT:
 	    case RIGHT:
-		if(goal.getLocation().x+blindness == snake.getHead().x){
-		    if(goal.getLocation().y < snake.getHead().y && !snake.isCollisionAhead(UP, 1, avoidPoints))
+		if(goal.x == snake.getHead().x){
+		    if(goal.y < snake.getHead().y && !snake.isCollisionAhead(UP, 1, avoidPoints))
 			snake.changeDirection(Snake.UP);
-		    else if(goal.getLocation().y+blindness > snake.getHead().y && !snake.isCollisionAhead(DOWN, 1, avoidPoints))
+		    else if(goal.y > snake.getHead().y && !snake.isCollisionAhead(DOWN, 1, avoidPoints))
 			snake.changeDirection(Snake.DOWN);
 		}
 		
 		if(snake.isCollision(avoidPoints)){
-		    if(goal.getLocation().y < snake.getHead().y){
+		    if(goal.y < snake.getHead().y){
 			if (snake.isCollisionAhead(UP, 1, avoidPoints)) {
 			    snake.changeDirection(Snake.DOWN);
 			} else {

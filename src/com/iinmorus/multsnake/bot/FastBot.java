@@ -20,9 +20,9 @@ public class FastBot extends Bot{
 	switch(snake.getDirection()){
 	    case DOWN:
 	    case UP:
-		if(goal.x+blindness < snake.getHead().x && !snake.isCollisionAhead(LEFT, 1, avoidPoints))
+		if(goal.x < snake.getHead().x && !snake.isCollisionAhead(LEFT, 1, avoidPoints))
 		    snake.changeDirection(Snake.LEFT);
-		else if(goal.x+blindness > snake.getHead().x && !snake.isCollisionAhead(RIGHT, 1, avoidPoints))
+		else if(goal.x > snake.getHead().x && !snake.isCollisionAhead(RIGHT, 1, avoidPoints))
 		    snake.changeDirection(Snake.RIGHT);
 		
 		if(snake.isCollision(avoidPoints)){
@@ -35,9 +35,9 @@ public class FastBot extends Bot{
 		break;
 	    case LEFT:
 	    case RIGHT:
-		if(goal.y+blindness < snake.getHead().y && !snake.isCollisionAhead(UP, 1, avoidPoints))
+		if(goal.y < snake.getHead().y && !snake.isCollisionAhead(UP, 1, avoidPoints))
 		    snake.changeDirection(Snake.UP);
-		else if(goal.y+blindness > snake.getHead().y && !snake.isCollisionAhead(DOWN, 1, avoidPoints)) 
+		else if(goal.y > snake.getHead().y && !snake.isCollisionAhead(DOWN, 1, avoidPoints)) 
 		    snake.changeDirection(Snake.DOWN);
 		
 		if (snake.isCollision(avoidPoints)) {

@@ -1,5 +1,6 @@
 package com.iinmorus.multsnake.state;
 
+import com.iinmorus.multsnake.engine.StateManager;
 import com.iinmorus.multsnake.bot.Bot;
 import com.iinmorus.multsnake.bot.FastBot;
 import com.iinmorus.multsnake.bot.PreciseBot;
@@ -19,32 +20,16 @@ import java.util.ArrayList;
 
 public class Multiplayer extends State{
     private static final long serialVersionUID = 1;
-    
-    //ui
-    private Color backgroung = Color.BLACK;
-    private Color overColor = Color.RED;
-    private Color pauseColor = Color.YELLOW;
-    private String overMsg = "GAME OVER";
-    private String pauseMsg = "PAUSED";
-    private Font scoreFont = new Font(Font.MONOSPACED, Font.PLAIN, 20);
-    private Font warningFont = new Font(Font.MONOSPACED, Font.BOLD, 100);
-    
+
     //entities
     private Snake snake_P2;
     private Snake snake_P1;
     private Cherry cherry;
     private Walls walls;
     private Bot bot;
-    
-    //configs
-    private int updateTick = 3;
-    private int wallRefreshTick = 600;
-    private int baseWallAmount = 30;
-    private int baseScore = 5;
-    private int difficulty = StateManager.EASY;
-    
+       
     //status
-    private boolean isPaused, isOver, isBot;
+    private boolean isBot;
     private int score_P1, score_P2, time, wallAmount;
 
     public Multiplayer(StateManager sManager){
@@ -92,7 +77,7 @@ public class Multiplayer extends State{
             
 	    if(stateTick%updateTick == 0){
 		ArrayList<Point> blacklist = new ArrayList<>();
-		blacklist.addAll(walls.getWalls());
+		if(walls.isCollidable()) blacklist.addAll(walls.getWalls());
 		blacklist.addAll(snake_P1.getSnakePoints());
 		blacklist.addAll(snake_P2.getSnakePoints());
                 
@@ -120,6 +105,9 @@ public class Multiplayer extends State{
 
             if(stateTick%wallRefreshTick == 0)
                 walls = new Walls(baseWallAmount, cherry.getLocation());
+	    
+	    if(stateTick%wallRefreshTick-wallFormationTick == 0)
+                walls.setCollidable(true);
 	    
 	    if(stateTick%(1000/Engine.TICK_RATE) == 0)
 		time++;
@@ -219,7 +207,7 @@ public class Multiplayer extends State{
     public void setPaused(boolean isPaused){this.isPaused = isPaused;}
 
     public void setDifficulty(int difficulty){this.difficulty = difficulty;}
-    public void vsBot(){isBot = true;}
+    public void vsBot(boolean isBot){this.isBot = isBot;}
     
     public int getScore_P1(){return score_P1;}
     public int getScore_P2(){return score_P2;}

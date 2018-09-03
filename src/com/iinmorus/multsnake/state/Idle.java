@@ -1,5 +1,6 @@
 package com.iinmorus.multsnake.state;
 
+import com.iinmorus.multsnake.engine.StateManager;
 import com.iinmorus.multsnake.bot.Bot;
 import com.iinmorus.multsnake.bot.FastBot;
 import com.iinmorus.multsnake.engine.Renderer;
@@ -16,7 +17,6 @@ import java.awt.event.MouseEvent;
 public class Idle extends State{
 
     //ui
-    private Color backgroung = Color.BLACK;
     private Font titleFont = new Font(Font.MONOSPACED, Font.BOLD, 60);
     private Color titleColor = Color.RED;
     private String title = "GET THAT CHERRY";
@@ -27,11 +27,6 @@ public class Idle extends State{
     private Cherry cherry;
     private Bot bot;
     private Walls walls;
-    
-    //configs
-    private float updateTick = 3F;
-    private float wallRefreshTick = 600F;
-    private int wallAmount = 50;
     
     //status
     private Point lastClick;
@@ -48,7 +43,8 @@ public class Idle extends State{
 	cherry = new Cherry();
 	bot = new FastBot(snake);
 	bot.changeGoal(cherry.getLocation());
-	walls = new Walls(wallAmount, cherry.getLocation());
+	baseWallAmount = 50;
+	walls = new Walls(baseWallAmount, cherry.getLocation());
     }
 
     @Override
@@ -59,7 +55,7 @@ public class Idle extends State{
 	    if(lastClick!=null && snake.getHead().equals(lastClick)) 
 		bot.changeGoal(cherry.getLocation());
 	   
-	    bot.control(walls.getWalls());
+	    bot.control(walls.isCollidable()? walls.getWalls() : snake.getSnakePoints());
 	    snake.move();
 	    
 	    if(snake.getHead().equals(cherry.getLocation())){
@@ -69,7 +65,11 @@ public class Idle extends State{
 	}
 	
 	if(stateTick%wallRefreshTick == 0)
-	    walls = new Walls(wallAmount, cherry.getLocation());
+	    walls = new Walls(baseWallAmount, cherry.getLocation());
+	
+	if(stateTick%wallRefreshTick-wallFormationTick == 0)
+                walls.setCollidable(true);
+	    
     }
 
     @Override

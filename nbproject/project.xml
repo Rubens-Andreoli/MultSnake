@@ -3,9 +3,8 @@
     <type>org.netbeans.modules.java.j2seproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/j2se-project/3">
-            <name>MultSnake 0.3.1</name>
+            <name>MultSnake 0.3.2</name>
             <source-roots>
-                <root id="src.sounds.dir" name="Sounds"/>
                 <root id="src.dir"/>
             </source-roots>
             <test-roots>

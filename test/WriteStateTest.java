@@ -1,5 +1,6 @@
 
 
+import com.iinmorus.multsnake.engine.StateManager;
 import com.iinmorus.multsnake.state.*;
 import com.iinmorus.multsnake.engine.Renderer;
 import java.awt.Color;

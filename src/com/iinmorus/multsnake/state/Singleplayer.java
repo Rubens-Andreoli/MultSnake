@@ -1,5 +1,6 @@
 package com.iinmorus.multsnake.state;
 
+import com.iinmorus.multsnake.engine.StateManager;
 import com.iinmorus.multsnake.engine.Engine;
 import com.iinmorus.multsnake.engine.Renderer;
 import com.iinmorus.multsnake.entity.Cherry;
@@ -16,29 +17,12 @@ import java.util.ArrayList;
 public class Singleplayer extends State{
     private static final long serialVersionUID = 1;
     
-    //ui
-    private Color backgroung = Color.BLACK;
-    private Color overColor = Color.RED;
-    private Color pauseColor = Color.YELLOW;
-    private String overMsg = "GAME OVER";
-    private String pauseMsg = "PAUSED";
-    private Font scoreFont = new Font(Font.MONOSPACED, Font.PLAIN, 20);
-    private Font warningFont = new Font(Font.MONOSPACED, Font.BOLD, 100);
-    
     //entities
     private Snake snake;
     private Cherry cherry;
     private Walls walls;
     
-    //configs
-    private int updateTick = 3;
-    private int wallRefreshTick = 600;
-    private int baseWallAmount = 30;
-    private int baseScore = 5;
-    private int difficulty = StateManager.EASY;
-    
     //status
-    private boolean isPaused, isOver;
     private int score, time, wallAmount;
     
     public Singleplayer(StateManager sManager){
@@ -69,7 +53,7 @@ public class Singleplayer extends State{
 		blacklist.addAll(walls.getWalls());
 		blacklist.addAll(snake.getSnakePoints());
                 
-		if(!snake.isCollision(blacklist)){
+		if(!snake.isCollision(walls.isCollidable()? blacklist: snake.getSnakePoints())){
                     snake.move();
                     if(snake.getHead().equals(cherry.getLocation())){
                         score += baseScore*difficulty;
@@ -81,6 +65,9 @@ public class Singleplayer extends State{
 
             if(stateTick%wallRefreshTick == 0)
                 walls = new Walls(wallAmount, cherry.getLocation());
+	    
+	    if(stateTick%wallRefreshTick-wallFormationTick == 0)
+                walls.setCollidable(true);
 	    
 	    if(stateTick%(1000/Engine.TICK_RATE) == 0)
 		time++;
