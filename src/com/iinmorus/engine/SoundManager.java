@@ -43,9 +43,9 @@ public class SoundManager {
 	    clips.put(audioID, c);
 	} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 	    e.printStackTrace();
-	}finally{
+	}/*finally{
 	    System.gc(); //workaround to close audio stream, ais.close doesn't free memory...
-	}
+	}*/
     }
 	
     public void play(String audioID) {

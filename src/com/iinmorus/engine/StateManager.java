@@ -36,7 +36,11 @@ public class StateManager{
     public void startState(String stateID){
 	if(!states.containsKey(stateID)) return;
 	if(loadBehaviour == 2) loadResources(stateID);
-	if(currentState != null) states.get(currentState).unload();
+	if(currentState != null){
+            String temp = currentState;
+            currentState = null;
+            states.get(temp).unload();
+        }
 	states.get(stateID).start();
 	currentState = stateID;
     }
@@ -57,7 +61,11 @@ public class StateManager{
 
     public void resumeState(String stateID){
 	if(!states.containsKey(stateID)) return;
-	if(currentState != null) states.get(currentState).unload();
+	if(currentState != null){
+            String temp = currentState;
+            currentState = null;
+            states.get(temp).unload();
+        };
 	currentState = stateID;
     }
     
