@@ -116,7 +116,7 @@ public class SoundManager {
     public int getPosition(String audioID) { 
 	Clip c = clips.get(audioID);
 	if(c == null) return -1;
-	return c.getFramePosition(); 
+	return c.getFramePosition()%c.getFrameLength(); 
     }
 	
     public void close(String audioID) {

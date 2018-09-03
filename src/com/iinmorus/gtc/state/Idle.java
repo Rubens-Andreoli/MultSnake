@@ -41,12 +41,10 @@ public class Idle extends GTCState{
 	walls = new Walls(baseWallAmount);
 
 	engine.sounds.loop("idle", 600, engine.sounds.getFrames("idle") - 2000);
-        //System.out.println(engine.sounds.getFrames("idle")); 1283328
     }
 
     @Override
     public void update() {
-        System.out.println(engine.sounds.getPosition("idle"));
         walls.update(cherry.getLocation());
 	    
 	if(lastClick!=null && snake.getHead().equals(lastClick)) 
