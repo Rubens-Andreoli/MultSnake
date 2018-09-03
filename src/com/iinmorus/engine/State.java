@@ -3,20 +3,26 @@ package com.iinmorus.engine;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.Serializable;
 
-public interface State{
+public abstract class State implements Serializable{
     
-    String getStateID();
+    protected final Engine engine;
     
-    void loadResources();
-    void start();
-    void update();
-    void draw(Graphics2D g);
-    void unload();
+    public State(final Engine engine){
+	this.engine = engine;
+    }
     
-    void keyPressed(KeyEvent e);
-    void keyReleased(KeyEvent e);
-    void mousePressed(MouseEvent e);
+    public abstract String getStateID();
     
-    void setPaused(boolean isPaused);
+    protected abstract void loadResources();
+    protected abstract void start();
+    protected abstract void update();
+    protected abstract void draw(Graphics2D g);
+    protected abstract void setPaused(boolean isPaused);
+    
+    protected abstract void keyPressed(KeyEvent e);
+    protected abstract void keyReleased(KeyEvent e);
+    protected abstract void mousePressed(MouseEvent e);
+
 }

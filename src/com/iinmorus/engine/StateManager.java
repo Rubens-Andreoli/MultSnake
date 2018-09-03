@@ -1,35 +1,27 @@
 package com.iinmorus.engine;
 
-import static com.iinmorus.engine.StateManager.LoadBehavior.START;
+import static com.iinmorus.engine.StateManager.LoadStrategy.REGISTER;
+import static com.iinmorus.engine.StateManager.LoadStrategy.START;
 import java.awt.Graphics2D;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.HashMap;
-import static com.iinmorus.engine.StateManager.LoadBehavior.CONSTRUCTION;
 
 public class StateManager{
 
-    public static enum LoadBehavior{
-	MANUAL, CONSTRUCTION, START;
+    public enum LoadStrategy{
+	MANUAL, REGISTER, START;
     }
-
-    private LoadBehavior loadBehavior;
+    
+    private final LoadStrategy loadStrategy;
     private final HashMap<String, State> states;
     private String currentState;
-    private final Game game;
- 
-    public StateManager(Game game){
-        this.game = game;
-	this.states = game.stateMap;
-        
-        if(loadBehavior == CONSTRUCTION){
-            for(String stateID : states.keySet())
-                loadResources(stateID);
-        }
-        
-        startState(game.startStateID);
+
+    protected StateManager(final LoadStrategy loadStrategy){
+        states = new HashMap<String, State>();
+        this.loadStrategy = loadStrategy;
     }
 
     public void loadResources(String stateID){
@@ -37,10 +29,20 @@ public class StateManager{
 	states.get(stateID).loadResources();
     }
     
+    public void registerState(State state){
+	String stateID = state.getStateID();
+	if(!states.containsKey(stateID)){
+	    states.put(stateID, state);
+	    if(loadStrategy == REGISTER) loadResources(stateID);
+	}else{
+	    states.put(stateID, state);
+	}
+    }
+    
     public void startState(String stateID){
 	if(!states.containsKey(stateID)) return;
-	if(loadBehavior == START) loadResources(stateID);
-	if(currentState != null) states.get(currentState).unload();
+	if(loadStrategy == START) loadResources(stateID);
+	if(currentState != null) states.get(currentState).setPaused(true);
 	states.get(stateID).start();
 	currentState = stateID;
     }
@@ -49,15 +51,13 @@ public class StateManager{
 	if(!file.exists()) return;
 	try(FileInputStream fileInput = new FileInputStream(file);
 		ObjectInputStream objectInput = new ObjectInputStream(fileInput);) {
-	    State state = (State)objectInput.readObject();
-	    String stateID = state.getStateID();
-	    states.put(stateID, state);
+	    registerState((State)objectInput.readObject());
 	}
     }
 
     public void resumeState(String stateID){
 	if(!states.containsKey(stateID)) return;
-	if(currentState != null) states.get(currentState).unload();
+	if(currentState != null) states.get(currentState).setPaused(true);
 	currentState = stateID;
     }
     

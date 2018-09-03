@@ -13,13 +13,13 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class SoundManager {
     
     private final HashMap<String, Clip> clips;
-    private final Game game;
+    private final float loadVolume;
     private boolean mute;
 
-    public SoundManager(Game game) {
-	clips = new HashMap<String, Clip>();
-        this.game = game;
-    }
+    protected SoundManager(float loadVolume){
+        clips = new HashMap<String, Clip>();
+	this.loadVolume = loadVolume;
+   }
 
     public void load(String filepath, String audioID){
 	if(clips.get(audioID) != null) return;
@@ -38,12 +38,13 @@ public class SoundManager {
 	    AudioInputStream dais = AudioSystem.getAudioInputStream(decodeFormat, ais);
 	    Clip c = AudioSystem.getClip();
 	    c.open(dais);
+	    setVolume(c, loadVolume);
 	    clips.put(audioID, c);
 	} catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
 	    e.printStackTrace();
-	}finally{
+	}/*finally{
 	    System.gc(); //workaround to close audio stream, ais.close doesn't free memory...
-	}
+	}*/
     }
 	
     public void play(String audioID) {
@@ -51,7 +52,7 @@ public class SoundManager {
     }
 	
     public void play(String audioID, int frame) {
-	if(mute || !game.engine.isRunning()) return;
+	if(mute) return;
 	Clip c = clips.get(audioID);
 	if(c == null) return;
 	if(c.isRunning()) c.stop();
@@ -71,7 +72,7 @@ public class SoundManager {
     }
 	
     public void resume(String audioID) {
-	if(mute || !game.engine.isRunning()) return;
+	if(mute) return;
 	Clip c = clips.get(audioID);
 	if(c == null) return;
 	if(c.isRunning()) return;
@@ -91,12 +92,12 @@ public class SoundManager {
     }
 	
     public void loop(String audioID, int frame, int start, int end) {
-	if(mute || !game.engine.isRunning()) return;
-        Clip c = clips.get(audioID);
+	if(mute) return;
+	Clip c = clips.get(audioID);
 	if(c == null) return;
 	stop(audioID);
 	c.setLoopPoints(start, end);
-	c.setFramePosition(frame);
+	c.setFramePosition(frame); //FIX: error if pass frame end...
 	while(!c.isRunning()) c.loop(Clip.LOOP_CONTINUOUSLY);
     }
 	
@@ -111,6 +112,7 @@ public class SoundManager {
 	if(c == null) return -1;
 	return c.getFrameLength(); 
     }
+    
     public int getPosition(String audioID) { 
 	Clip c = clips.get(audioID);
 	if(c == null) return -1;

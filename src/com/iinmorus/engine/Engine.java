@@ -1,30 +1,64 @@
 package com.iinmorus.engine;
 
-public class Engine implements Runnable{
+import java.awt.Graphics2D;
 
+public class Engine{
+    
+    //settings
+    public final Settings settings;
+    
+    //parts
     private final Game game;
+    private final Thread thread;
+    public final Renderer renderer;
+    public final Input input;
+    public final SoundManager sounds;
+    public final StateManager states;
+
+    //status
     private boolean running;
 
     public Engine(Game game){
+	this.settings = game.getSettings();
 	this.game = game;
-    }
-        
-    @Override
-    public void run(){
-        if(running || game == null) return;
-        running = true;
-        loop();
+	
+	//initiate parts
+	thread = new Thread(new Runnable(){
+	    @Override
+	    public void run() {
+		loop();
+	    }
+	});
+	sounds = new SoundManager(settings.loadVolume);
+	states = new StateManager(settings.loadStrategy);
+	renderer = new Renderer(this);
+	input = new Input(states);
+
+	//configure parts
+	thread.setName(game.getName());
+	if(settings.listenMouse) renderer.addMouseListener(input);
+	if(settings.listenKey) renderer.addKeyListener(input);
     }
     
-    private void loop(){
-	final double TICK_HERTZ = 1000000000 / game.settings.tickRate;
+    public void start(){
+	for(State state : game.generateStateList(this))
+	    states.registerState(state);
+	states.startState(game.firstStateID());
+        renderer.requestFocus();
+	thread.start();
+    }
+    
+    protected void loop(){
+	final double TICK_HERTZ = 1000000000 / settings.tickRate;
 	long now;
 	long after;
+	
+	running = true;
 
 	while(running) {
 	    now = System.nanoTime();
-	    game.update();
-            game.render();
+	    states.update();
+	    renderer.repaint();
 	    after = System.nanoTime();
 			
 	    while(now - after < TICK_HERTZ){
@@ -37,9 +71,15 @@ public class Engine implements Runnable{
     
     public void stop(){
 	if(!running) return;
+	sounds.stopAll();
 	running = false;
     }
     
+    protected void render(Graphics2D g){
+	states.draw(g);
+	g.dispose();
+    }
+
     public boolean isRunning(){return running;}
 
 }
